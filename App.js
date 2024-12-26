@@ -87,7 +87,7 @@ const App = () => {
           <Stack.Screen name="MedicalLibraryScreen" component={MedicalLibraryScreen} options={{ title: 'Medical Library' }} />
           <Stack.Screen name="FirstAidScreen" component={FirstAidScreen} options={{ title: 'First Aid' }} />
           <Stack.Screen name="NotificationScreen" component={NotificationScreen} options={{ title: 'Notifications' }} />
-          <Stack.Screen name="HealthTipsScreen" component={HealthTipsScreen} options={{ title: 'Health Tips' }} />
+          <Stack.Screen name="HealthTipsScreen" component={FindDoctorScreen} options={{ title: 'Docors' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

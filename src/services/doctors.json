@@ -1,0 +1,415 @@
+[
+  {
+    "name": "Uzm. Dr. Ahmet Körceğez",
+    "specialty": "Internal Diseases",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/e2bf3b11df0b872112757f1c2fee6e32_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Aykut Üretici",
+    "specialty": "Physical Therapy & Rehabilitation",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/4965657af186b9092c7a96976ffe881c_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Ayşe Zeki",
+    "specialty": "Çocuk ve Ergen Psikiyatrisi",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/d48ed900e79fa9547169c26138b4cd8d_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Doç. Dr. Bahar Kaymakamzade",
+    "specialty": "Neurology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/c99e3db826c0f4cc2688a36ce3b60e1a_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Cemal Mert",
+    "specialty": "Pediatrics",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/f4b6dca0e2911082f0eb6e1df1a0e11d_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Burcu Yağlı Salihoğlu",
+    "specialty": "Physical Therapy & Rehabilitation",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/be28adfff47893c4519c1307dc6b8866_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Çağın Zaim",
+    "specialty": "Cardiovascular Surgery",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/6f43b5263fbba79c5962514b85d34738_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Çağla Çelikkan",
+    "specialty": "Gynecology & Obstetrics",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/3749aaa8ee129d7e919bddcc7e09cd36_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Çisem Raziye Özçay",
+    "specialty": "Psychiatry",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/852967248dd3e6cb3942a1fe6af42945_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Dua Cebeci",
+    "specialty": "Dermatological Diseases",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/542390225756f78888142d54f3d17e01_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Emine Akçin",
+    "specialty": "Neurology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/8b6e33345ac8d5ffd9cf0d107a7d9e9d_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Erdem Karaman",
+    "specialty": "Psychiatry",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/e9c724eeb5636d1c1c1a2c2e85d40377_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Ergün Ökçün",
+    "specialty": "Otorhinolaryngology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/ccb4e23c8aa216f1e96d31ab209c036b_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Filiz Çalışkaner",
+    "specialty": "Internal Diseases",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/fa55c8bad0e242eb7986dc1135b50adb_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Hakan Debeş",
+    "specialty": "Cardiology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/af2ef6a0e2c9c528b09655df79f3b312_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Hakkı Serhat Tulay",
+    "specialty": "Radiology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/f7a0a54c92471ac4480e727e4ccf93df_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Havva Yeşildağlı",
+    "specialty": "Pulmonology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/c1572c59821062c96d0fc33ad32a2983_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Hürkan Harutoğlu",
+    "specialty": "Otorhinolaryngology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/39eee751af30032eeece2f48de2de4ba_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Hüseyin Sennaroğlu",
+    "specialty": "Radiology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/0b1ad7a7b79268a1f4558db78e092446_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Jin. Op. Dr. İçten Kıvançlı",
+    "specialty": "Gynecology & Obstetrics",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/feb4274796d93ff716e9650163a77fb8_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. İbrahim Kobat",
+    "specialty": "Pathology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/71f67488b0857639cee631943a3fc6fa_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Kenan Arifoğlu",
+    "specialty": "Aesthetic, Plastic & Reconstructive Surgery",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/19f9cefdfb07230a68581d617885a3af_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Mehmet Faydalı",
+    "specialty": "Eye Diseases",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/8fe3e0f34d3083cba6fe73d62a783d7f_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Mehmet Can Salihoğlu",
+    "specialty": "Internal Diseases",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/4d8c9898b5bb88437f053c8b957f47f3_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Mehmet İnan",
+    "specialty": "General Surgery",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/077ab55046ce80eaf9a3ddea999597ca_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Mehmet Tuzlalı",
+    "specialty": "Urology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/01f1a05053c6242fcfa23075e5b963c1_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Mehmet Yağlı",
+    "specialty": "Psychiatry",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/a522a6005d1cb428ea34ef1769cd7452_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Mustafa Hasoğlan",
+    "specialty": "Ortopedics and Traumatology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/787ae9ec9023a82f5aa7e4c1a64f73cb_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Nezire Güllü",
+    "specialty": "Cardiology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/fc34f61d23b74be53ee07d469bd32064_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Okan Dağlı",
+    "specialty": "Internal Diseases",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/620466077c427f141effa294382f5fba_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Ozan Tokmak",
+    "specialty": "Ortopedics and Traumatology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/13f34e2b533e12c6166f88368dcd8c07_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Pınar Midem",
+    "specialty": "Anesthesia",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/5483e331a9bace540b3a2478fc014e25_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Rohat Kutlay",
+    "specialty": "Aesthetic, Plastic & Reconstructive Surgery",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/1c0ae2205709722b62e843abc0471a55_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Ruhsan Tuğyan",
+    "specialty": "Dermatological Diseases",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/64d93d666355a43c4a86679a030d35b6_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Selçuk Çağsın",
+    "specialty": "Gastroenterology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/c889234799e865bbe90cee71f6cd2e53_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Sıdıka Taşeloğlu",
+    "specialty": "Eye Diseases",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/233826a67be66a810b23a263230da62e_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Jin. Op. Dr. Serap Kağan",
+    "specialty": "Gynecology / IVF",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/fd8b0f77d767f1f6640afba6916ff67c_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Süreyya Vudalı",
+    "specialty": "Radiology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/f710044bf79a4b1f5d8b085e5e5d9711_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Tevfik Eker",
+    "specialty": "General Surgery",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/867519228d1d5325856fc61d710ded0e_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr. Türker Erkcan",
+    "specialty": "Pediatrics",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/36fdb1a35cd2f54f95cf2119fb5bc7ed_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Op. Dr. Zehra Gürcafer",
+    "specialty": "Gynecology & Obstetrics",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/924e149af069b8ea323a809fbb1171d4_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Dr. Dt. Alev İnan",
+    "specialty": "Dental and Prothesis",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/9b2c4b44fb86522964124ed80d03c5e8_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dt. Deniz Dellaloğlu",
+    "specialty": "Orthodontics",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/90701d02ae3da0e5a21abbd900c25748_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Dt. Esra İlkerli",
+    "specialty": "Dental Diseases",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/220c08548cac211cc7db219bb52f46cf_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Yrd. Doç. Dr. Kaan Asvaroğlu",
+    "specialty": "Implantology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/eb6c7c01c4e98e1f2578f9959463b973_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dt. Seniha Öztoprak",
+    "specialty": "Periodontology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/a27a3b73d355048c6bab885897085f62_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Dr. Dt. Sıla Korun",
+    "specialty": "Pedodontics",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/d3b3799d6611d677944f5f86a500beb3_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Dr. Dt. Yezdan Erkcan",
+    "specialty": "Dental & Prothesis",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/22c02097e4438bd2f2f3fe4a6a3ab0e1_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Podolog Halide Dalokay",
+    "specialty": "Podology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/c3997142576e6f4d163ead570965368d_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Irmak Arcan",
+    "specialty": "Audiology Language & Speech Disorders",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/339a0e1449b6b4062056bc300d87e893_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Dr Sema Çetin",
+    "specialty": "Pediatric Immunology and Allergy Diseases",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/2a14beb1aee2d71c6fecb12f25c690f7_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Sude Dermay",
+    "specialty": "Audiology Language & Speech Disorders",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/00e7056ec788d5b42162a6c13dbba43c_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Dr. Psk. Dnş. Burçin Hocaoğlu Pekineli",
+    "specialty": "Psychological Counselling",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/d6086de322f98f66cc694f32ea284557_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Psk. Naife Sevdalı",
+    "specialty": "Psychology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/deb45d333d0414ba3de42155789fdb4a_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Psk. Özlem Zorba",
+    "specialty": "Psychology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/aaa082d2257ab65aecf61c2340e9c5b9_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Uzm. Psk. Perihan Asenay",
+    "specialty": "Clinical Psychology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/4695cb3b19cbf906e45dac0da0913068_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Dyt. Turgut Arşan",
+    "specialty": "Nutritionist",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/00d9b1e39f02d57be65ad2a9a6eaa3b8_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Dyt. Şayan SAYGIN",
+    "specialty": "Nutritionist",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/deb9f9efc56ef2a940bdf0d58ccaad5c_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  },
+  {
+    "name": "Biologist Salih Tavukçu",
+    "specialty": "Biology",
+    "image": "https://cypruscentralhospital.com/media/k2/items/cache/0548677e6432786dd8df61eb3aaec139_M.jpg",
+    "phone": "+90 (392) 366 50 85",
+    "email": "info@cypruscentralhospital.com"
+  }
+]
