@@ -6,15 +6,16 @@ import { getFirestore } from 'firebase/firestore'; // Import Firestore
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCQqMtPyQtXm8dfuJQKK2ITjtjj_Ui1MkE",
-  authDomain: "drgpt-ad363.firebaseapp.com",
-  databaseURL: "https://drgpt-ad363-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "drgpt-ad363",
-  storageBucket: "drgpt-ad363.firebasestorage.app",
-  messagingSenderId: "449715385470",
-  appId: "1:449715385470:web:ed04539b6f9d0a3a8f142f",
-  measurementId: "G-TQP1C7WLVZ"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.authDomain,
+  databaseURL: process.env.databaseURL,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.measurementId,
+  appId: process.env.appId,
+  measurementId: process.env.measurementId
 };
+
 
 // Initialize Firebase app
 const app = initializeApp(firebaseConfig);
