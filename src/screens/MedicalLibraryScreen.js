@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { Card } from 'react-native-paper';  // Using Card component for the box
+import { Card } from 'react-native-paper';  // Using Card component for the boxx
 
 const MedicalLibrartyScreen = () => {
   return (
