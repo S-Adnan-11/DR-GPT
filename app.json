@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "drgpt",
+    "slug": "drgpt",
+    "scheme": "drgpt",
+    "version": "1.0.0",
+    "main": "App.js",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aledrisy.drgpt",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
+      }
+    },
+    "android": {
+      "permissions": [
+        "RECEIVE_BOOT_COMPLETED"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.aledrisy.drgpt"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e7194f46-05de-4910-820c-349e93c558ac"
+      },
+      "androidClientId": "447271841764-iprvi87262sg9lt7tusooake3pls5mo4.apps.googleusercontent.com",
+      "iosClientId": "447271841764-aigi29l7g4sei3am2h3su1o2q7r1ghmh.apps.googleusercontent.com",
+      "webClientId": "447271841764-mf51gagkja359ncsger6r5f2qlrs77c5.apps.googleusercontent.com"
+    },
+    "newArchEnabled": true
+  }
+}

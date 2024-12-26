@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "449715385470",
+    "project_id": "drgpt-ad363",
+    "storage_bucket": "drgpt-ad363.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449715385470:android:d74df93ec5042f028f142f",
+        "android_client_info": {
+          "package_name": "com.aledrisy.drgpt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "449715385470-1as7i6b4b1jsas3d2dk0cct0ib38ng24.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpGLoIPW5QUvtE7Es55DKqW3hCe3lO4F8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "449715385470-1as7i6b4b1jsas3d2dk0cct0ib38ng24.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "449715385470-2sl8sloon1rtpallaof3spksc4k1hdsh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aledrisy.drgpt"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
