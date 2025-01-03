@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   callButton: {
-    backgroundColor: '#FF4D4D',
+    backgroundColor: '#FF0000',
   },
   messageButton: {
     backgroundColor: '#2260FF',

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   AppText: {
-    color: Colors.secondaryColor,
+    color: Colors.primaryColor,
     fontSize: 14,
     textAlign: "center",
     marginBottom: 15,

@@ -32,7 +32,7 @@ const HomeScreen = ({ navigation }) => {
         setGreetingBasedOnTime(); // Set greeting when user logs in
       } else {
         setUserName('');
-        setGreeting('Good Morning'); // Default greeting if no user logged in
+        setGreeting('Good Day'); // Default greeting if no user logged in
       }
     });
 
@@ -95,7 +95,7 @@ const HomeScreen = ({ navigation }) => {
     } else if (currentHour < 18) {
       setGreeting('Good Afternoon');
     } else {
-      setGreeting('Good Night');
+      setGreeting('Good Evening');
     }
   };
 
@@ -233,11 +233,11 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.quickLinksContainer}>
           {[
             { icon: 'chat', title: 'Dr.GPT', screen: 'DR.GPT' },
-            { icon: 'heart', title: 'Health Records', screen: 'HealthTipsScreen' },
-            { icon: 'hospital-building', title: 'Nearby Hospitals', screen: 'NearbyHospitalScreen' },
+            { icon: 'doctor', title: 'Find Doctors', screen: 'HealthTipsScreen' },
+            { icon: 'library', title: 'Health Library', screen: 'MedicalLibraryScreen' },
           ].map((item, index) => (
             <Card key={index} style={styles.quickLinkCard} onPress={() => navigation.navigate(item.screen)}>
-              <IconButton icon={item.icon} size={40} style={styles.quickLinkIcon} />
+              <IconButton icon={item.icon} size={45} style={styles.quickLinkIcon} />
               <Text style={styles.quickLinkText}>{item.title}</Text>
             </Card>
           ))}
@@ -317,11 +317,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8',
   },
   header: {
-    backgroundColor: Colors.primaryColor,
+    backgroundColor: Colors.primary,
     paddingVertical: 65,
     paddingHorizontal: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+    paddingRight: 20,
+    paddingLeft: 20,
+    
   },
   headerRow: {
     flexDirection: 'row',
@@ -329,7 +332,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   menu: {
-    color: '#FFF', position: 'absolute', top: 150, right: 15, left: 125
+    color: '#F0F4F8', 
+    position: 'absolute', 
+    top: 150, 
+    right: 15, 
+    left: 125
   },
   headerText: {
     color: '#FFF',
@@ -346,6 +353,7 @@ const styles = StyleSheet.create({
   },
   notificationIcon: {
     backgroundColor: '#FFFFFF33',
+    marginLeft: 10,
   },
   searchBar: {
     height: 40,
@@ -472,7 +480,7 @@ const styles = StyleSheet.create({
     bottom: 30,
     right: 20,
     borderRadius: 100,
-    backgroundColor: '#D91656',
+    backgroundColor: '#FF0000',
   },
   loadingIndicator: {
     marginTop: 20,

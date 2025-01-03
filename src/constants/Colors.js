@@ -1,5 +1,6 @@
 export default {
     //primary: '#0085EBFF',
+    //primary: '#23b2fd',
     primary: '#2260FF',
     buttons: '#2260FF',
     cards: '#D2DDFA',

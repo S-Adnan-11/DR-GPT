@@ -26,7 +26,39 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
 import EmergencyScreen from './src/screens/EmergencyScreen';
 import MedicalLibraryScreen from './src/screens/MedicalLibraryScreen';
+import SearchScreen from './src/screens/MedicalLibrary/SearchScreen';
+
+import AddictionRecovery from './src/screens/MedicalLibrary/AddictionRecovery';
+import AlternativeMedicine from './src/screens/MedicalLibrary/AlternativeMedicine';
+import AlternativeTherapies from './src/screens/MedicalLibrary/AlternativeTherapies';
+import BreathingHeartHealth from './src/screens/MedicalLibrary/BreathingHeartHealth';
+import DiseaseManagement from './src/screens/MedicalLibrary/DiseaseManagement';
+import Drugs from './src/screens/MedicalLibrary/Drugs';
+import EnvironmentalHealth from './src/screens/MedicalLibrary/EnvironmentalHealth';
+import Fitness from './src/screens/MedicalLibrary/Fitness';
+import GeneralHealth from './src/screens/MedicalLibrary/GeneralHealth';
+import GeneticsMedicine from './src/screens/MedicalLibrary/GeneticsMedicine';
+import HealthNews from './src/screens/MedicalLibrary/HealthNews';
+import HealthyAging from './src/screens/MedicalLibrary/HealthyAging';
+import ImmuneInfectiousDiseases from './src/screens/MedicalLibrary/ImmuneInfectiousDiseases';
+import MensHealth from './src/screens/MedicalLibrary/MensHealth';
+import MentalHealth from './src/screens/MedicalLibrary/MentalHealth';
+import Nutrition from './src/screens/MedicalLibrary/Nutrition';
+import Parenting from './src/screens/MedicalLibrary/Parenting';
+import SeniorHealth from './src/screens/MedicalLibrary/SeniorHealth';
+import SexEmotionalHealth from './src/screens/MedicalLibrary/SexEmotionalHealth';
+import SleepHealth from './src/screens/MedicalLibrary/SleepHealth';
+import TeethOralHealth from './src/screens/MedicalLibrary/TeethOralHealth';
+import TelemedicineTelehealth from './src/screens/MedicalLibrary/TelemedicineTelehealth';
+import WomensHealth from './src/screens/MedicalLibrary/WomensHealth';
+import WorkplaceHealth from './src/screens/MedicalLibrary/WorkplaceHealth';
+
 import FirstAidScreen from './src/screens/FirstAidScreen';
+import CprAndChokingScreen from './src/screens/FirstAid/CprAndChokingScreen';
+import WoundBurnBleedingScreen from './src/screens/FirstAid/WoundBurnBleedingScreen';
+import FracturesAndSprainsScreen from './src/screens/FirstAid/FracturesAndSprainsScreen';
+import PoisonAndAllergiesScreen from './src/screens/FirstAid/PoisonAndAllergiesScreen';
+
 import { auth, onAuthStateChanged } from './src/constants/FireBaseConfig'; // Firebase Authentication
 import 'react-native-gesture-handler'; // Ensure gesture handler is imported
 import 'react-native-reanimated'; // Ensure Reanimated is imported
@@ -85,9 +117,38 @@ const App = () => {
           <Stack.Screen name="EmergencyScreen" component={EmergencyScreen} options={{ title: 'Emergency' }} />
           <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={{ title: 'Settings' }} />
           <Stack.Screen name="MedicalLibraryScreen" component={MedicalLibraryScreen} options={{ title: 'Medical Library' }} />
+          <Stack.Screen name="SearchScreen" component={SearchScreen} />
+          <Stack.Screen name="AddictionRecovery" component={AddictionRecovery} options={{ title: 'Addiction Recovery' }} />
+          <Stack.Screen name="AlternativeMedicine" component={AlternativeMedicine} options={{ title: 'Alternative Medicine' }} />
+          <Stack.Screen name="AlternativeTherapies" component={AlternativeTherapies} options={{ title: 'Alternative Therapies' }} />
+          <Stack.Screen name="BreathingHeartHealth" component={BreathingHeartHealth} options={{ title: 'Breathing Heart Health' }} />
+          <Stack.Screen name="DiseaseManagement" component={DiseaseManagement} options={{ title: 'Disease Management' }} />
+          <Stack.Screen name="Drugs" component={Drugs} options={{ title: 'Drugs' }} />
+          <Stack.Screen name="EnvironmentalHealth" component={EnvironmentalHealth} options={{ title: 'Environmental Health' }} />
+          <Stack.Screen name="Fitness" component={Fitness} options={{ title: 'Fitness' }} />
+          <Stack.Screen name="GeneralHealth" component={GeneralHealth} options={{ title: 'General Health' }} />
+          <Stack.Screen name="GeneticsMedicine" component={GeneticsMedicine} options={{ title: 'Genetics Medicine' }} />
+          <Stack.Screen name="HealthNews" component={HealthNews} options={{ title: 'Health News' }} />
+          <Stack.Screen name="HealthyAging" component={HealthyAging} options={{ title: 'Healthy Aging' }} />
+          <Stack.Screen name="ImmuneInfectiousDiseases" component={ImmuneInfectiousDiseases} options={{ title: 'Immune & Infectious Diseases' }} />
+          <Stack.Screen name="MensHealth" component={MensHealth} options={{ title: 'Men’s Health' }} />
+          <Stack.Screen name="MentalHealth" component={MentalHealth} options={{ title: 'Mental Health' }} />
+          <Stack.Screen name="Nutrition" component={Nutrition} options={{ title: 'Nutrition' }} />
+          <Stack.Screen name="Parenting" component={Parenting} options={{ title: 'Parenting' }} />
+          <Stack.Screen name="SeniorHealth" component={SeniorHealth} options={{ title: 'Senior Health' }} />
+          <Stack.Screen name="SexEmotionalHealth" component={SexEmotionalHealth} options={{ title: 'Sex & Emotional Health' }} />
+          <Stack.Screen name="SleepHealth" component={SleepHealth} options={{ title: 'Sleep Health' }} />
+          <Stack.Screen name="TeethOralHealth" component={TeethOralHealth} options={{ title: 'Teeth & Oral Health' }} />
+          <Stack.Screen name="TelemedicineTelehealth" component={TelemedicineTelehealth} options={{ title: 'Telemedicine & Telehealth' }} />
+          <Stack.Screen name="WomensHealth" component={WomensHealth} options={{ title: 'Women’s Health' }} />
+          <Stack.Screen name="WorkplaceHealth" component={WorkplaceHealth} options={{ title: 'Workplace Health' }} />
           <Stack.Screen name="FirstAidScreen" component={FirstAidScreen} options={{ title: 'First Aid' }} />
+          <Stack.Screen name="CprAndChokingScreen" component={CprAndChokingScreen} options={{title: 'CPR & Choking'}}/>
+          <Stack.Screen name="WoundBurnBleedingScreen"component={WoundBurnBleedingScreen} options={{ title: 'Burns, Cuts and Bleeding'}}/>
+          <Stack.Screen name="FracturesAndSprainsScreen" component={FracturesAndSprainsScreen} options={{title: 'Frcatures and Spain'}}/>
+          <Stack.Screen name="PoisonAndAllergiesScreen"component={PoisonAndAllergiesScreen} options={{ title: 'Poison and Allergies'}}/>
           <Stack.Screen name="NotificationScreen" component={NotificationScreen} options={{ title: 'Notifications' }} />
-          <Stack.Screen name="HealthTipsScreen" component={FindDoctorScreen} options={{ title: 'Docors' }} />
+          <Stack.Screen name="HealthTipsScreen" component={FindDoctorScreen} options={{ title: 'Doctors' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
