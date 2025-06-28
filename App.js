@@ -5,6 +5,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Provider as PaperProvider, Menu, IconButton, Divider } from 'react-native-paper';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome } from '@expo/vector-icons';
+
+//import { i18n } from './src/i18n'; 
+
+
 // Screens
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import AuthScreen from './src/screens/AuthScreen';
@@ -72,6 +76,17 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const App = () => {
+
+  // const [language, setLanguage] = useState(i18n.locale);
+
+  // // Switch language function
+  // const switchLanguage = (lang) => {
+  //   i18n.locale = lang;
+  //   setLanguage(lang);  // Update state to trigger re-render
+  // };
+
+
+
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -96,6 +111,7 @@ const App = () => {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName={userData ? 'HomeScreen' : 'WelcomeScreen'}>
+        
           {/* Authentication Flow */}
           <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ headerShown: false }} />
@@ -148,8 +164,16 @@ const App = () => {
           <Stack.Screen name="FracturesAndSprainsScreen" component={FracturesAndSprainsScreen} options={{title: 'Frcatures and Spain'}}/>
           <Stack.Screen name="PoisonAndAllergiesScreen"component={PoisonAndAllergiesScreen} options={{ title: 'Poison and Allergies'}}/>
           <Stack.Screen name="NotificationScreen" component={NotificationScreen} options={{ title: 'Notifications' }} />
-          <Stack.Screen name="HealthTipsScreen" component={FindDoctorScreen} options={{ title: 'Doctors' }} />
+          <Stack.Screen name="HealthTipsScreen" component={HealthTipsScreen} options={{ title: 'Health Tips' }} />
         </Stack.Navigator>
+
+        {/* <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
+        <Button
+          title={i18n.t('languageSwitcher')}
+          onPress={() => switchLanguage(language === 'en' ? 'ar' : 'en')}
+        />
+        </View> */}
+
       </NavigationContainer>
     </PaperProvider>
   );
@@ -210,6 +234,7 @@ const Tabs = ({ navigation }) => {
               <Menu.Item onPress={() => handleNavigation('FirstAidScreen')} title="First Aid" />
               <Menu.Item onPress={() => handleNavigation('NotificationScreen')} title="Notifications" />
               <Menu.Item onPress={() => handleNavigation('NearbyHospitalScreen')} title="NearbyHospital" />
+              <Menu.Item onPress={() => handleNavigation('HealthTipsScreen')} title="Health Tips"/>
               <Divider />
               <Menu.Item onPress={() => handleNavigation('EmergencyScreen')} title="Emergency" />
             </Menu>
