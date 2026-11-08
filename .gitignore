@@ -3,6 +3,13 @@
 # dependencies
 node_modules/
 
+# Generated native projects and private artifacts
+/android/
+/ios/
+*.apk
+*.aab
+*.keystore
+
 # Expo
 .expo/
 dist/
