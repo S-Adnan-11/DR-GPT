@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "snapshot": {
+    "kind": "fixture",
+    "updatedAt": "2026-11-08",
+    "coverage": "Fictional facilities in Sample area A and Sample area B. No live care listings."
+  },
+  "guides": [
+    {
+      "id": "prepare-visit",
+      "title": "Preparing questions for a visit",
+      "summary": "A short place to start when planning what to ask.",
+      "topics": ["visit-preparation"],
+      "body": [
+        { "heading": "What would you like to understand?", "text": "Think about the questions you want to ask. You can bring your own notes to the visit." },
+        { "heading": "Questions to consider", "text": "What should I understand before I leave? What happens next? Who should I contact if I have another question?" }
+      ],
+      "sources": [],
+      "review": { "status": "draft", "reviewedAt": null },
+      "images": []
+    }
+  ],
+  "firstAid": [
+    { "id": "cpr-choking", "title": "CPR and choking", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": [] },
+    { "id": "wounds-burns-bleeding", "title": "Wounds, burns and bleeding", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": [] },
+    { "id": "poison-allergies", "title": "Poisoning and allergies", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": [] },
+    { "id": "fractures-sprains", "title": "Fractures and sprains", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": [] }
+  ],
+  "facilities": [
+    {
+      "id": "fixture-harbour-clinic-a",
+      "status": "fixture",
+      "name": "Demo Harbour Clinic",
+      "facilityType": "Clinic",
+      "area": "Sample area A",
+      "address": "Example address A1 (fictional)",
+      "serviceTags": ["General practice"],
+      "sources": [{ "id": "fixture-directory-a1", "kind": "fixture", "fields": ["name", "facilityType", "area", "address", "serviceTags"] }]
+    },
+    {
+      "id": "fixture-harbour-clinic-b",
+      "status": "fixture",
+      "name": "Demo Harbour Clinic",
+      "facilityType": "Clinic",
+      "area": "Sample area B",
+      "address": "Example address B1 (fictional)",
+      "serviceTags": ["Dental care"],
+      "sources": [{ "id": "fixture-directory-b1", "kind": "fixture", "fields": ["name", "facilityType", "area", "address", "serviceTags"] }]
+    },
+    {
+      "id": "fixture-garden-hospital",
+      "status": "fixture",
+      "name": "Demo Garden Hospital",
+      "facilityType": "Hospital",
+      "area": "Sample area A",
+      "address": "Example address A2 (fictional)",
+      "serviceTags": ["General practice", "Dental care"],
+      "sources": [{ "id": "fixture-directory-a2", "kind": "fixture", "fields": ["name", "facilityType", "area", "address", "serviceTags"] }]
+    },
+    {
+      "id": "fixture-meadow-clinic",
+      "status": "fixture",
+      "name": "Demo Meadow Clinic",
+      "facilityType": "Clinic",
+      "area": "Sample area B",
+      "address": "Example address B2 (fictional)",
+      "sources": [{ "id": "fixture-directory-b2", "kind": "fixture", "fields": ["name", "facilityType", "area", "address"] }]
+    }
+  ]
+}

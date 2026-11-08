@@ -1,0 +1,97 @@
+const nonempty = (value) => typeof value === 'string' && value.trim().length > 0;
+const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
+const textList = (value) => Array.isArray(value) && value.every(nonempty);
+const date = (value) => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+  Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
+const https = (value) => typeof value === 'string' && /^https:\/\/[^\s/?#]+(?:[/?#][^\s]*)?$/.test(value);
+const check = (condition, message) => { if (!condition) throw new Error(message); };
+const normalized = (value = '') => String(value).trim().toLowerCase();
+
+function validateGuide(guide) {
+  check(nonempty(guide.title) && nonempty(guide.summary) && textList(guide.topics) && guide.topics.length > 0, 'Guide metadata is incomplete.');
+  check(Array.isArray(guide.body) && guide.body.every((section) => nonempty(section.heading) && nonempty(section.text)), 'Guide body is invalid.');
+  check(textList(guide.images), 'Guide image IDs must be an array.');
+  check(Array.isArray(guide.sources) && guide.sources.every((source) => nonempty(source.title) && https(source.url)), 'Guide sources must identify HTTPS references.');
+  check(['draft', 'reviewed'].includes(guide.review?.status), 'Guide review status is invalid.');
+  if (guide.review.status === 'reviewed') {
+    check(date(guide.review.reviewedAt) && guide.sources.length > 0 && guide.body.length > 0, 'Reviewed guides need a review date, body and sources.');
+  } else {
+    check(guide.review.reviewedAt === null, 'Draft guides must not claim a review date.');
+  }
+}
+
+function validateFacility(facility) {
+  for (const field of ['name', 'facilityType', 'area', 'address']) check(nonempty(facility[field]), `Facility ${field} is required.`);
+  check(['fixture', 'draft', 'published'].includes(facility.status), 'Facility status is invalid.');
+  check(Array.isArray(facility.sources) && facility.sources.length > 0, 'Facility source records are required.');
+  for (const source of facility.sources) {
+    check(nonempty(source.id) && ['fixture', 'official', 'registration', 'independent'].includes(source.kind) && textList(source.fields), 'Facility source record is invalid.');
+    if (source.kind !== 'fixture') check(https(source.url) && date(source.checkedAt), 'Real facility sources need an HTTPS URL and check date.');
+  }
+  if (hasOwn(facility, 'serviceTags')) check(textList(facility.serviceTags), 'Unknown services must be omitted.');
+  if (hasOwn(facility, 'coordinates')) {
+    const point = facility.coordinates;
+    check(point && Number.isFinite(point.latitude) && Math.abs(point.latitude) <= 90 && Number.isFinite(point.longitude) && Math.abs(point.longitude) <= 180, 'Facility coordinates are invalid.');
+  }
+  for (const field of ['contactUrl', 'bookingUrl']) {
+    if (hasOwn(facility, field)) check(https(facility[field]), `Facility ${field} must be an official HTTPS destination.`);
+  }
+  if (hasOwn(facility, 'hours')) check(nonempty(facility.hours), 'Unknown hours must be omitted.');
+  if (facility.status === 'fixture') {
+    check(facility.id.startsWith('fixture-') && facility.sources.every((source) => source.kind === 'fixture'), 'Fixture facilities need fictional IDs and sources.');
+    check(['coordinates', 'contactUrl', 'bookingUrl', 'hours'].every((field) => !hasOwn(facility, field)), 'Fixture facilities cannot supply real destinations or hours.');
+  }
+  if (facility.status === 'published') {
+    check(facility.sources.every((source) => source.kind !== 'fixture'), 'Fictional sources cannot support a published facility.');
+    const fields = ['name', 'facilityType', 'area', 'address', ...['serviceTags', 'coordinates', 'hours', 'contactUrl', 'bookingUrl'].filter((field) => hasOwn(facility, field))];
+    for (const field of fields) {
+      check(facility.sources.some((source) => source.fields.includes(field) &&
+        (!['serviceTags', 'hours', 'contactUrl', 'bookingUrl'].includes(field) || source.kind === 'official')), `Published facility ${field} needs supporting evidence; services and contact details need an official source.`);
+    }
+  }
+}
+
+function validateCatalog(catalog) {
+  check(catalog?.schemaVersion === 1, 'Unsupported catalog schema.');
+  check(['fixture', 'draft', 'published'].includes(catalog.snapshot?.kind) && date(catalog.snapshot.updatedAt) && nonempty(catalog.snapshot.coverage), 'Catalog snapshot metadata is required.');
+  const ids = new Set();
+  for (const [key, validate] of [['guides', validateGuide], ['firstAid', validateGuide], ['facilities', validateFacility]]) {
+    check(Array.isArray(catalog[key]), `Catalog ${key} must be an array.`);
+    for (const record of catalog[key]) {
+      check(nonempty(record.id) && !ids.has(record.id), 'Catalog IDs must be unique across all records.');
+      ids.add(record.id);
+      validate(record);
+      if (key === 'facilities') check(catalog.snapshot.kind === 'fixture' ? record.status === 'fixture' : record.status !== 'fixture', 'Snapshot and facility kinds must agree.');
+      if (catalog.snapshot.kind === 'published') check(key === 'facilities' ? record.status === 'published' : record.review.status === 'reviewed', 'Published snapshots cannot contain drafts.');
+    }
+  }
+  return catalog;
+}
+
+function filterFacilities(facilities, { query = '', area = '', facilityType = '', service = '' } = {}) {
+  const term = normalized(query);
+  return facilities.filter((facility) =>
+    (!term || [facility.name, facility.address, facility.area, facility.facilityType, ...(facility.serviceTags || [])].some((text) => normalized(text).includes(term))) &&
+    (!normalized(area) || normalized(facility.area) === normalized(area)) &&
+    (!normalized(facilityType) || normalized(facility.facilityType) === normalized(facilityType)) &&
+    (!normalized(service) || (facility.serviceTags || []).some((tag) => normalized(tag) === normalized(service)))
+  );
+}
+
+function searchGuides(guides, query = '') {
+  const term = normalized(query);
+  return guides.filter((guide) => [guide.title, guide.summary, ...guide.topics].some((text) => normalized(text).includes(term)));
+}
+
+function selectPublicCatalog(catalog) {
+  validateCatalog(catalog);
+  return validateCatalog({
+    schemaVersion: 1,
+    snapshot: { ...catalog.snapshot, kind: 'published' },
+    guides: catalog.guides.filter((guide) => guide.review.status === 'reviewed'),
+    firstAid: catalog.firstAid.filter((guide) => guide.review.status === 'reviewed'),
+    facilities: catalog.facilities.filter((facility) => facility.status === 'published'),
+  });
+}
+
+module.exports = { validateCatalog, filterFacilities, searchGuides, selectPublicCatalog };
