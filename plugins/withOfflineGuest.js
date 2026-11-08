@@ -47,6 +47,15 @@ function withOfflineGuest(config, profile = {}) {
     const directory = path.join(result.modRequest.platformProjectRoot, 'app/src/main/res/xml');
     await fs.mkdir(directory, { recursive: true });
     await fs.writeFile(path.join(directory, 'guest_development_network.xml'), `<?xml version="1.0" encoding="utf-8"?>\n<network-security-config><base-config cleartextTrafficPermitted="false"/><domain-config cleartextTrafficPermitted="true"><domain includeSubdomains="false">${host}</domain></domain-config></network-security-config>\n`);
+    // The debug overlay is higher priority than the main manifest's removals.
+    const debugManifest = path.join(result.modRequest.platformProjectRoot, 'app/src/debug/AndroidManifest.xml');
+    let debug = await fs.readFile(debugManifest, 'utf8');
+    if (!debug.includes('xmlns:tools=')) debug = debug.replace('<manifest ', '<manifest xmlns:tools="http://schemas.android.com/tools" ');
+    debug = debug.replace(/<uses-permission\b[^>]*\/>/g, (tag) => {
+      const name = denied.find((value) => tag.includes(`android:name="${value}"`) || tag.includes(`android:name='${value}'`));
+      return name ? `<uses-permission android:name="${name}" tools:node="remove"/>` : tag;
+    });
+    await fs.writeFile(debugManifest, debug);
     return result;
   }]);
   return withAppBuildGradle(config, (result) => {

@@ -4,7 +4,7 @@ This branch builds **DR. GPT Guest Test** (`com.drgpt.guest`), a private, fictio
 
 ## Build
 
-Use Node/npm, Java 17, Android SDK platform 35, build-tools 35.0.0, NDK 26.1.10909125 and CMake 3.22.1. Keep the lockfile. Resolved dependencies and Expo/React Native versions are unchanged.
+Use Node/npm, Java 17, Android SDK platform 35, build-tools 35.0.0, NDK 26.1.10909125 and CMake 3.22.1. Keep the lockfile. Existing resolved dependencies and Expo/React Native versions are retained; the separate development profile adds pinned SDK 52 tooling, excluded from the offline native module set.
 
 Supply `DRGPT_TEST_KEYSTORE` and `DRGPT_TEST_STORE_PASSWORD` through the protected process environment. The test keystore uses alias `drgpt-test`. Keep keys and passwords outside source, logs and Git.
 
@@ -12,11 +12,11 @@ Supply `DRGPT_TEST_KEYSTORE` and `DRGPT_TEST_STORE_PASSWORD` through the protect
 .\scripts\build-android-guest.ps1 -BuildRoot <short-external-directory> -JdkRoot <jdk-root> -SdkRoot <android-sdk-root> -OutputDirectory <private-output-directory>
 ```
 
-The script stages only guest source and selected existing illustrations outside every Git worktree, installs locked packages with lifecycle scripts disabled, runs tests, generates Android and assembles a signed release APK with embedded JavaScript/assets. It first uses the npm cache in offline mode; a fresh build host must populate that cache from the locked packages. It rejects unmanaged nonempty build directories. An existing managed build can be reused.
+The script stages only guest source and selected existing illustrations outside every Git worktree, installs locked packages with lifecycle scripts disabled, runs tests, generates Android and assembles a signed release APK with embedded JavaScript/assets. Installation prefers the npm cache and fetches any missing locked packages. It rejects unmanaged nonempty build directories. An existing managed build can be reused for the same profile. Use a separate directory for development binaries.
 
 One original PNG-named illustration contains WebP bytes. The script verifies the format and creates a byte-identical `.webp` alias only in private staging. No alias or generated binary is committed. Original image files are retained. Image publication rights remain a separate decision; this build is for private review.
 
-`DRGPT_BUILD_PROFILE=guest` is required by configuration. Missing or other profiles fail closed. The app has no Internet, location, camera, microphone or notification permission. JavaScript network APIs and external link/call/message intents are blocked independently. Legacy service configuration and screens are excluded from build staging and the guest entry graph. This is an Android test path; iOS has not been validated.
+`DRGPT_BUILD_PROFILE=guest` selects the offline configuration. Missing or unrecognized profiles fail closed; `guest-dev` is a deliberate separate [development profile](android-development.md). The offline app has no Internet, location, camera, microphone or notification permission. JavaScript network APIs and external link/call/message intents are blocked independently. Legacy service configuration and screens are excluded from build staging and the guest entry graph. This is an Android test path; iOS has not been validated.
 
 ## Guest behavior
 
