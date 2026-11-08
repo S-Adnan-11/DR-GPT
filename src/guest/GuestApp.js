@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BackHandler, Keyboard, ScrollView, StatusBar, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, initialWindowMetrics } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { startupError, assertGuestMode } from './runtime';
+import { startupError, assertGuestMode, developmentBuild } from './runtime';
 import { Home, Learn, Guide, FirstAid, FirstAidDetail, Care, Facility, Prepare, Saved, Ask, Topic } from './screens';
 import s, { colors } from './styles';
 import { Notice } from './components';
@@ -51,7 +51,7 @@ function GuestRoot() {
   return <View style={s.shell}>
     <View style={s.header}>
       <View style={s.headerRow}><TouchableOpacity accessibilityRole="button" accessibilityLabel="DR. GPT home" onPress={() => go('home')} style={s.brand}><Text accessible={false} allowFontScaling={false} style={s.brandMark}>+</Text><Text style={s.brandText}>DR. GPT</Text></TouchableOpacity><TouchableOpacity accessibilityRole="button" onPress={() => go('firstAid')} style={s.aidAction}><Text style={s.aidText}>First aid</Text></TouchableOpacity></View>
-      <Text style={s.privateLabel}>Private guest test · Fictional directory · Offline</Text>
+      <Text style={s.privateLabel}>{developmentBuild() ? 'Development · Fictional directory · Metro only' : 'Private guest test · Fictional directory · Offline'}</Text>
       {history.length > 1 ? <TouchableOpacity accessibilityRole="button" accessibilityLabel="Back" style={s.back} onPress={() => { Keyboard.dismiss(); setFeedback(''); setHistory((value) => router.back(value)); }}><Text style={s.backText}>← Back</Text></TouchableOpacity> : null}
     </View>
     <ScrollView ref={scroll} testID="guest-content" style={s.scroll} contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">

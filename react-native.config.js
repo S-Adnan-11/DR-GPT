@@ -5,6 +5,6 @@ const excluded = [
   'react-native-maps', 'react-native-notifications', 'react-native-audio-recorder-player',
   'react-native-config', 'react-native-image-picker', 'react-native-localize', 'react-native-permissions',
 ];
-module.exports = process.env.DRGPT_BUILD_PROFILE === 'guest'
+module.exports = ['guest', 'guest-dev'].includes(process.env.DRGPT_BUILD_PROFILE)
   ? { dependencies: Object.fromEntries(excluded.map((name) => [name, { platforms: { android: null, ios: null } }])) }
   : {};

@@ -1,5 +1,7 @@
 param(
     [Parameter(Mandatory = $true)][string]$BuildRoot,
+    [ValidateSet('guest','guest-dev')][string]$Profile = 'guest',
+    [ValidateSet('Handset','Emulator')][string]$Target = 'Handset',
     [string]$JdkRoot = $env:JAVA_HOME,
     [string]$SdkRoot = $env:ANDROID_HOME,
     [string]$OutputDirectory
@@ -31,7 +33,9 @@ $env:JAVA_HOME = $JdkRoot
 $env:ANDROID_HOME = $SdkRoot
 $env:ANDROID_SDK_ROOT = $SdkRoot
 $env:PATH = (Join-Path $JdkRoot 'bin') + ';' + (Join-Path $SdkRoot 'platform-tools') + ';' + $env:PATH
-$env:DRGPT_BUILD_PROFILE = 'guest'
+$env:DRGPT_BUILD_PROFILE = $Profile
+$env:DRGPT_ANDROID_TARGET = $Target.ToLowerInvariant()
+if ($Profile -eq 'guest-dev' -and -not $env:DRGPT_METRO_ORIGIN) { $env:DRGPT_METRO_ORIGIN = 'http://127.0.0.1:8081' }
 $env:CI = '1'
 $env:EXPO_NO_TELEMETRY = '1'
 $env:EXPO_OFFLINE = '1'
@@ -40,7 +44,7 @@ Push-Location $sourceRoot
 try {
     $files = @(git ls-files --cached --others --exclude-standard)
     if ($LASTEXITCODE -ne 0) { throw 'Cannot enumerate source inputs.' }
-    $rootInputs = @('App.js','index.js','app.config.js','package.json','package-lock.json','babel.config.js','metro.config.js','react-native.config.js')
+    $rootInputs = @('App.js','index.js','app.config.js','package.json','package-lock.json','babel.config.js','metro.config.js','react-native.config.js','scripts/guest-profile.cjs','scripts/guest-assets.cjs')
     $assetInputs = @('assets/icon.png','assets/logo.png','assets/adaptive-icon.png',
         'assets/LibraryPhotos/medical_library.jpg','assets/LibraryPhotos/sleep.jpg','assets/LibraryPhotos/nutrition2.jpeg','assets/LibraryPhotos/mental_health.jpg','assets/LibraryPhotos/fitness3.jpg',
         'assets/FirstAidIcons/first_aid.jpg','assets/FirstAidIcons/cpr-icon.png','assets/FirstAidIcons/burn-icon.png','assets/FirstAidIcons/poison-icon.png','assets/FirstAidIcons/fracture-icon.png')
@@ -67,7 +71,7 @@ try {
     $lockHash = (Get-FileHash -LiteralPath 'package-lock.json' -Algorithm SHA256).Hash
     $installedLock = Join-Path $buildPath '.guest-installed-lock'
     if (-not (Test-Path -LiteralPath 'node_modules\expo') -or -not (Test-Path -LiteralPath $installedLock) -or (Get-Content -LiteralPath $installedLock -Raw).Trim() -ne $lockHash) {
-        & npm.cmd ci --ignore-scripts --no-audit --no-fund --offline
+        & npm.cmd ci --ignore-scripts --no-audit --no-fund --prefer-offline
         if ($LASTEXITCODE -ne 0) { throw 'Locked dependency installation failed.' }
         Set-Content -LiteralPath $installedLock -Value $lockHash
     }
@@ -88,14 +92,17 @@ try {
     }
     Push-Location 'android'
     try {
-        & .\gradlew.bat :app:assembleRelease --no-daemon --max-workers=4
+        $taskName = if ($Profile -eq 'guest-dev') { ':app:assembleDebug' } else { ':app:assembleRelease' }
+        & .\gradlew.bat $taskName --no-daemon --max-workers=4
         if ($LASTEXITCODE -ne 0) { throw 'Android release APK build failed.' }
     } finally { Pop-Location }
-    $apk = Join-Path $buildPath 'android\app\build\outputs\apk\release\app-release.apk'
+    $variant = if ($Profile -eq 'guest-dev') { 'debug' } else { 'release' }
+    $apk = Join-Path $buildPath ('android\app\build\outputs\apk\' + $variant + '\app-' + $variant + '.apk')
     if (-not (Test-Path -LiteralPath $apk)) { throw 'The expected APK was not produced.' }
     if ($OutputDirectory) {
         New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
-        $artifact = Join-Path $OutputDirectory 'dr-gpt-guest.apk'
+        $artifactName = if ($Profile -eq 'guest-dev') { if ($Target -eq 'Emulator') { 'dr-gpt-guest-dev-x86_64.apk' } else { 'dr-gpt-guest-dev-arm64.apk' } } elseif ($Target -eq 'Emulator') { 'dr-gpt-guest-emulator.apk' } else { 'dr-gpt-guest.apk' }
+        $artifact = Join-Path $OutputDirectory $artifactName
         Copy-Item -LiteralPath $apk -Destination $artifact -Force
         Get-FileHash -LiteralPath $artifact -Algorithm SHA256
     } else { Get-FileHash -LiteralPath $apk -Algorithm SHA256 }

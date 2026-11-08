@@ -1,4 +1,7 @@
-const { withAndroidManifest, withAppBuildGradle, withGradleProperties } = require('expo/config-plugins');
+const { withAndroidManifest, withAppBuildGradle, withGradleProperties, withSettingsGradle, withDangerousMod } = require('expo/config-plugins');
+const { developmentModules } = require('../scripts/guest-profile.cjs');
+const fs = require('node:fs/promises');
+const path = require('node:path');
 
 const blockedPermissions = [
   'INTERNET', 'ACCESS_NETWORK_STATE', 'ACCESS_WIFI_STATE', 'CHANGE_WIFI_STATE',
@@ -12,25 +15,40 @@ const blockedPermissions = [
   'READ_PHONE_STATE', 'GET_ACCOUNTS', 'READ_CONTACTS', 'WRITE_CONTACTS', 'CALL_PHONE', 'SEND_SMS',
 ].map((name) => `android.permission.${name}`);
 
-function withOfflineGuest(config) {
+function withOfflineGuest(config, profile = {}) {
+  const denied = config.android?.blockedPermissions || blockedPermissions;
+  const development = profile.development === true;
   config = withAndroidManifest(config, (result) => {
     const manifest = result.modResults.manifest;
     manifest.$['xmlns:tools'] = 'http://schemas.android.com/tools';
     manifest['uses-permission'] = (manifest['uses-permission'] || []).filter(
-      (permission) => !blockedPermissions.includes(permission.$['android:name'])
-    ).concat(blockedPermissions.map((name) => ({ $: { 'android:name': name, 'tools:node': 'remove' } })));
+      (permission) => !denied.includes(permission.$['android:name'])
+    ).concat(denied.map((name) => ({ $: { 'android:name': name, 'tools:node': 'remove' } })));
     const application = manifest.application[0];
     application.$['android:allowBackup'] = 'false';
     application.$['android:usesCleartextTraffic'] = 'false';
     application.$['android:fullBackupContent'] = 'false';
+    if (development) application.$['android:networkSecurityConfig'] = '@xml/guest_development_network';
     return result;
   });
   config = withGradleProperties(config, (result) => {
-    const values = { reactNativeArchitectures: 'armeabi-v7a,arm64-v8a', 'org.gradle.jvmargs': '-Xmx6144m -XX:MaxMetaspaceSize=1024m', 'org.gradle.parallel': 'false' };
+    const values = { reactNativeArchitectures: (profile.architectures || ['armeabi-v7a','arm64-v8a']).join(','), 'org.gradle.jvmargs': '-Xmx6144m -XX:MaxMetaspaceSize=1024m', 'org.gradle.parallel': 'false' };
     result.modResults = result.modResults.filter((item) => !Object.hasOwn(values, item.key));
     for (const [key, value] of Object.entries(values)) result.modResults.push({ type: 'property', key, value });
     return result;
   });
+  config = withSettingsGradle(config, (result) => {
+    const excluded = [...require('../package.json').expo.autolinking.exclude, ...(development ? [] : developmentModules)];
+    result.modResults.contents = result.modResults.contents.replace(/useExpoModules\([^)]*\)/g, `useExpoModules([exclude: ${JSON.stringify(excluded)}])`);
+    return result;
+  });
+  if (development) config = withDangerousMod(config, ['android', async (result) => {
+    const host = new URL(profile.runtime.metroOrigin).hostname;
+    const directory = path.join(result.modRequest.platformProjectRoot, 'app/src/main/res/xml');
+    await fs.mkdir(directory, { recursive: true });
+    await fs.writeFile(path.join(directory, 'guest_development_network.xml'), `<?xml version="1.0" encoding="utf-8"?>\n<network-security-config><base-config cleartextTrafficPermitted="false"/><domain-config cleartextTrafficPermitted="true"><domain includeSubdomains="false">${host}</domain></domain-config></network-security-config>\n`);
+    return result;
+  }]);
   return withAppBuildGradle(config, (result) => {
     const start = '// BEGIN DRGPT GUEST SIGNING';
     const end = '// END DRGPT GUEST SIGNING';
@@ -49,7 +67,10 @@ android {
             keyPassword guestPassword
         }
     }
-    buildTypes { release { signingConfig signingConfigs.guest } }
+    buildTypes {
+        release { signingConfig signingConfigs.guest }
+        ${development ? 'debug { signingConfig signingConfigs.guest }' : ''}
+    }
 }
 ${end}`;
     result.modResults.contents = result.modResults.contents.replace(

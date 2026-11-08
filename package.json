@@ -6,7 +6,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "test:guest": "node --test tests/catalog.test.cjs tests/guest-*.test.cjs"
+    "test:guest": "node --test tests/catalog.test.cjs tests/guest-*.test.cjs",
+    "dev:guest": "node scripts/start-guest-dev.cjs"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
@@ -30,8 +31,9 @@
     "expo-application": "~6.0.2",
     "expo-auth-session": "~6.0.3",
     "expo-av": "~15.0.2",
-    "expo-crypto": "~14.0.2",
     "expo-constants": "17.0.8",
+    "expo-crypto": "~14.0.2",
+    "expo-dev-client": "5.0.13",
     "expo-google-sign-in": "^10.1.1",
     "expo-image-picker": "~16.0.6",
     "expo-location": "~18.0.7",
