@@ -8,9 +8,13 @@ The SDK 52 matched `expo-dev-client` is pinned to 5.0.13. Existing Expo, React N
 
 Run these commands on the computer physically connected to the phone, outside any remote Windows desktop. The computer needs Node/npm, Git and Android platform-tools (`adb`). It does not need the full Android build toolchain to run Metro.
 
+Use **Node 26.13.0 LTS** with its bundled **npm 11.20.0**. The repository's `.nvmrc` selects that version; guest tests and Metro source delivery were checked on Windows with it. Linux USB/phone checks remain pending. Install Git and ADB from the computer's package manager. This recipe uses [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) to select Node after cloning.
+
 ```sh
 git clone --branch work/android-guest https://github.com/S-Adnan-11/DR-GPT.git
 cd DR-GPT
+nvm install
+nvm use
 npm ci --ignore-scripts --no-audit --no-fund
 adb devices
 adb install -r /path/to/dr-gpt-guest-dev-arm64.apk
@@ -28,7 +32,7 @@ adb shell am start -W -a android.intent.action.VIEW -d 'drgpt-guest-dev://expo-d
 
 The USB reverse rule makes the phone's port 8081 reach Metro on that computer. No public tunnel, router change or public ADB/Metro listener is used. Remote Desktop itself does not provide this phone connection.
 
-For daily updates, run `git pull --ff-only` in this checkout. Metro serves the updated checkout directly. Ordinary screen JavaScript, styles and served assets should refresh in the installed app without Gradle or reinstalling. Use `r` in the Metro terminal to reload. `adb shell input keyevent 82` opens the development menu when needed. Reconnect USB and rerun `adb reverse tcp:8081 tcp:8081` after reconnecting/restarting the phone.
+For daily updates, run `git pull --ff-only` and `nvm use` in this checkout. Metro serves the updated checkout directly. Ordinary screen JavaScript, styles and served assets should refresh in the installed app without Gradle or reinstalling. Use `r` in the Metro terminal to reload. `adb shell input keyevent 82` opens the development menu when needed. Reconnect USB and rerun `adb reverse tcp:8081 tcp:8081` after reconnecting/restarting the phone.
 
 `npm run dev:guest` selects the deliberate development profile, disables CLI telemetry and binds Metro's TCP listeners to loopback. It first warms SDK 52's public configuration-schema cache when needed so local manifest icons resolve, then starts Expo in offline mode. This metadata request sends no app records. If connectivity is absent, Metro still starts and reports any missing manifest-icon metadata. SDK 52's `--offline` already chooses a local host; it cannot be combined with `--localhost`. The guest JS transport guard permits the configured private Metro origin and bundle/asset/hot-reload paths. The native network-security configuration permits cleartext only for the configured host. Missing/invalid profiles, public Metro origins and a development configuration in a release JS runtime fail safely.
 
