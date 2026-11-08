@@ -1,6 +1,10 @@
 
 # Dr.GPT - Healthcare Advice App
 
+This branch builds **DR. GPT Guest Test**, the private offline guest app. It includes a draft preparation guide, local saves/checklist, a fictional facility directory, and First Aid/AI review placeholders. See [Android guest build and checks](docs/android-guest.md) for the current instructions. It does not connect to the historical services described below.
+
+The original school prototype documentation and contributor history are retained below. The repository's [LICENSE](LICENSE) is the authoritative license text; image publication rights require separate review.
+
 Welcome to the **Dr.GPT** repository! This app provides AI-powered health advice, personalized health tips, and allows users to schedule appointments and reminders. It uses AI to simulate a health consultation, offering guidance on various health topics, while also providing personalized health tips based on the user’s lifestyle and medical history.
 
 ## 📜 Features

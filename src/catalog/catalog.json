@@ -17,14 +17,14 @@
       ],
       "sources": [],
       "review": { "status": "draft", "reviewedAt": null },
-      "images": []
+      "images": ["legacy-libraryphotos-medical_library-jpg"]
     }
   ],
   "firstAid": [
-    { "id": "cpr-choking", "title": "CPR and choking", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": [] },
-    { "id": "wounds-burns-bleeding", "title": "Wounds, burns and bleeding", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": [] },
-    { "id": "poison-allergies", "title": "Poisoning and allergies", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": [] },
-    { "id": "fractures-sprains", "title": "Fractures and sprains", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": [] }
+    { "id": "cpr-choking", "title": "CPR and choking", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": ["legacy-firstaidicons-cpr-icon-png"] },
+    { "id": "wounds-burns-bleeding", "title": "Wounds, burns and bleeding", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": ["legacy-firstaidicons-burn-icon-png"] },
+    { "id": "poison-allergies", "title": "Poisoning and allergies", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": ["legacy-firstaidicons-poison-icon-png"] },
+    { "id": "fractures-sprains", "title": "Fractures and sprains", "topics": ["first-aid"], "summary": "Guidance awaiting qualified review.", "body": [], "sources": [], "review": { "status": "draft", "reviewedAt": null }, "images": ["legacy-firstaidicons-fracture-icon-png"] }
   ],
   "facilities": [
     {
