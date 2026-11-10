@@ -22,7 +22,7 @@ function GuestRoot() {
   const store = useMemo(() => createGuestStore({ storage: AsyncStorage, catalog, assertEnabled: assertGuestMode }), []);
   const { fontScale } = useWindowDimensions();
   const scroll = useRef(null), route = history[history.length - 1], Screen = screens[route.name];
-  const active = router.activeTab(route);
+  const active = router.activeTab(route, history);
 
   useEffect(() => {
     let mounted = true;
@@ -43,7 +43,7 @@ function GuestRoot() {
     setBusy(true);
     try {
       const next = await store[operation](...args); setSaved(next);
-      setFeedback(next.status === 'session' ? 'Device storage is unavailable. Changes last only while this app stays open.' : operation === 'clearSaved' ? 'Saved guides and facilities cleared.' : operation === 'clearChecklist' ? 'Checklist cleared.' : 'Updated on this device.');
+      setFeedback(next.status === 'session' ? 'Device storage is unavailable. Changes last only while this app stays open.' : operation === 'clearSaved' ? 'Saved guides and facilities cleared.' : operation === 'clearChecklist' ? 'Checklist cleared.' : operation === 'removeUnavailableFacilities' ? 'Unavailable saved facilities removed.' : 'Updated on this device.');
     } catch { setFeedback('Unable to update saved items. You can keep reading and try again.'); }
     finally { setBusy(false); }
   }

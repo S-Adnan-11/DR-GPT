@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Button, CardLink, Heading, Notice, Paragraph, Picture, Pill, Subheading, TextLink } from './components';
 import { illustrations, topics, recordImage } from './illustrations';
 import s from './styles';
-const { filterFacilities, searchGuides } = require('../catalog/catalog');
+const { filterFacilities, locationCandidates, searchGuides } = require('../catalog/catalog');
 const { QUESTIONS } = require('./store');
 
 export function Home({ go }) {
@@ -73,7 +73,7 @@ export function FirstAidDetail({ catalog, route, go }) {
 
 export function FacilityCard({ facility, go }) {
   return <TouchableOpacity accessibilityRole="button" onPress={() => go('facility', facility.id)} style={s.card}>
-    <Pill>Fictional</Pill><Text style={s.h3}>{facility.name}</Text><Paragraph muted small>{facility.facilityType} · {facility.area}</Paragraph><Paragraph small>{facility.address}</Paragraph><Paragraph muted small>{facility.serviceTags?.join(' · ') || 'Services not supplied'}</Paragraph>
+    <Pill>Fictional</Pill><Text style={s.h3}>{facility.name}</Text>{facility.branchLabel ? <Text style={s.label}>{facility.branchLabel}</Text> : null}<Paragraph muted small>{facility.facilityType} · {facility.area}</Paragraph><Paragraph small>{facility.address}</Paragraph><Paragraph muted small>{facility.serviceTags?.length ? `Sample services: ${facility.serviceTags.join(' · ')}` : 'Services not supplied'}</Paragraph>
   </TouchableOpacity>;
 }
 
@@ -92,17 +92,20 @@ export function Care({ catalog, go, filters, setFilters }) {
     <View style={s.filterRow}>{fields.map(([key, label, all, values]) => <View key={key} style={[s.filterField, (fontScale > 1.3 || key === 'service') && { flexBasis: '100%' }]}><Text style={s.label}>{label}</Text><View style={s.pickerBox}><Picker accessibilityLabel={label} mode="dropdown" selectedValue={filters[key]} onValueChange={(value) => setFilters({ ...filters, [key]: value })} style={[s.picker, { minHeight: Math.max(52, 44 * fontScale) }]}><Picker.Item label={all} value="" />{values.map((value) => <Picker.Item key={value} label={value} value={value} />)}</Picker></View></View>)}</View>
     <TextLink title="Reset filters" onPress={reset} /><Text accessibilityLiveRegion="polite" style={[s.text, s.muted, s.small]}>{results.length} {results.length === 1 ? 'facility' : 'facilities'}</Text>
     {results.length ? results.map((facility) => <FacilityCard key={facility.id} facility={facility} go={go} />) : <View style={s.empty}><Subheading>No matching facilities</Subheading><Paragraph>This sample directory has limited coverage. Try another area or service.</Paragraph><Button secondary title="Clear all filters" onPress={reset} /></View>}
-    <Paragraph muted small>Snapshot: 8 Nov 2026 · Fictional data. Map and device location are unavailable; addresses remain in the list.</Paragraph>
+    <Paragraph muted small>Snapshot: {catalog.snapshot.updatedAt} · Fictional data. Map and device location are unavailable; addresses remain in the list.</Paragraph>
   </>;
 }
 
 export function Facility(props) {
   const facility = props.catalog.facilities.find((item) => item.id === props.route.id);
-  return <><Heading eyebrow="Facility detail">{facility.name}</Heading><View style={s.row}><Pill>{facility.facilityType}</Pill><Pill>{facility.area}</Pill></View>
+  const position = locationCandidates([facility])[0];
+  return <><Heading eyebrow="Facility detail">{facility.name}</Heading>{facility.branchLabel ? <Text style={s.h3}>{facility.branchLabel}</Text> : null}<View style={s.row}><Pill>{facility.facilityType}</Pill><Pill>{facility.area}</Pill></View>
     <Notice info>Fictional facility. This record demonstrates the page and is not a real place to get care.</Notice><SaveButton {...props} kind="facilities" id={facility.id} />
-    <Subheading>Location</Subheading><Paragraph>{facility.address}</Paragraph><View style={s.card}><Text style={s.h3}>Address available without a map</Text><Paragraph muted small>Map pin and directions are unavailable for this sample. No location permission is needed.</Paragraph></View>
-    <Subheading>Services</Subheading><Paragraph>{facility.serviceTags?.join(' · ') || 'Not supplied'}</Paragraph><Subheading>Contact & hours</Subheading><Paragraph muted small>Official contact: not supplied. Opening hours: not supplied.</Paragraph>
-    <Subheading>Source & verification</Subheading><Paragraph muted small>Bundled fictional fixture · Not verified against a real facility. Snapshot dated 8 Nov 2026.</Paragraph>
+    <Subheading>Address for this branch</Subheading><Paragraph>{facility.address}</Paragraph><View style={s.card}><Text style={s.h3}>Address available without a map</Text><Paragraph muted small>No device location is needed to read or save this address.</Paragraph></View>
+    <Subheading>Sample services</Subheading><Paragraph>{facility.serviceTags?.length ? facility.serviceTags.join(' · ') : 'Services not supplied for this branch.'}</Paragraph><Paragraph muted small>Fictional examples. Services have not been verified against a real facility.</Paragraph>
+    <Subheading>Contact & hours</Subheading><View style={s.card}><Text style={s.h3}>Contact unavailable</Text><Paragraph muted small>No official contact is supplied for this branch. Calling and booking are disabled in this test.</Paragraph><Text style={s.h3}>Opening hours unavailable</Text><Paragraph muted small>Hours have not been supplied. No opening status is assumed.</Paragraph></View>
+    <Subheading>Map & directions</Subheading><View style={s.card}><Text style={s.h3}>Map unavailable</Text><Paragraph muted small>{position ? 'A sourced position is recorded, but a map is not enabled in this test.' : 'No verified coordinates are supplied for this branch. No pin is shown.'}</Paragraph><Text style={s.h3}>Directions unavailable</Text><Paragraph muted small>This fictional location cannot be visited. No route or external destination is available.</Paragraph></View>
+    <Subheading>Source & verification</Subheading><Paragraph muted small>Bundled fictional fixture · Not verified against a real facility. Snapshot: {props.catalog.snapshot.updatedAt}.</Paragraph>
     <View style={s.rule} /><CardLink title="Prepare for a visit" description="Think through the questions you want to ask." icon="✓" onPress={() => props.go('prepare')} />
   </>;
 }
@@ -114,12 +117,13 @@ export function Prepare({ saved, busy, update }) {
   </>;
 }
 
-export function Saved({ catalog, saved, go, update }) {
+export function Saved({ catalog, saved, go, update, busy }) {
   const guides = catalog.guides.filter((item) => saved?.guides.includes(item.id));
   const facilities = catalog.facilities.filter((item) => saved?.facilities.includes(item.id));
   return <><Heading eyebrow="Saved">Keep what helps you.</Heading><Paragraph muted>Saved on this device. No account or sync.</Paragraph><Subheading>Guides</Subheading>
     {guides.length ? guides.map((guide) => <CardLink key={guide.id} title={guide.title} description="Available offline" onPress={() => go('guide', guide.id)} />) : <Paragraph muted small>No saved guides yet.</Paragraph>}
     <Subheading>Facilities</Subheading>{facilities.length ? facilities.map((facility) => <FacilityCard key={facility.id} facility={facility} go={go} />) : <Paragraph muted small>No saved facilities yet.</Paragraph>}
+    {saved?.unavailableFacilities.length ? <View style={s.card}><Text style={s.h3}>Saved facility unavailable</Text><Paragraph muted small>{saved.unavailableFacilities.length} saved {saved.unavailableFacilities.length === 1 ? 'facility is' : 'facilities are'} no longer in this directory. Other saved items and your checklist are kept.</Paragraph><Button secondary disabled={busy} title="Remove unavailable facilities" onPress={() => update('removeUnavailableFacilities')} /></View> : null}
     <CardLink title="Your visit checklist" description={`${saved?.checklist.length || 0} questions checked`} icon="✓" onPress={() => go('prepare')} /><View style={s.rule} />
     <TextLink danger title="Clear saved guides and facilities" onPress={() => update('clearSaved')} /><Paragraph muted small>The bundled guides remain available in Learn.</Paragraph>
   </>;

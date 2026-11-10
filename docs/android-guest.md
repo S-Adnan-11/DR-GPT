@@ -24,6 +24,10 @@ Home, Learn, Find care and Saved remain available from the bottom navigation. Th
 
 Saved guides, fictional facilities and three checklist choices use one namespaced device store. Only stable IDs and a schema version are stored. Clearing saved items preserves the checklist; clearing the checklist preserves saves. Missing or unreadable storage leaves reading and search usable. Failed writes explicitly report session-only state. The app does not sync or collect a health profile.
 
+Facility cards and details keep each branch's stable ID, branch label, area and address together. Sample services are labeled fictional; missing services, contact, hours, map and directions are explained without external actions. A facility opened from Saved keeps Saved selected, and Back returns to that list. Filter choices remain when returning to Find care.
+
+The saved-state key and version stay unchanged. Older guide/checklist saves without a facility collection load with an empty facility list. IDs removed from the catalog appear as unavailable saved facilities, with a removal action that preserves the other facilities, guides and checklist. No facility descriptions, contact details or personal notes enter storage. The location-candidate selector accepts only published records with finite in-range coordinates and dated source evidence; fixtures produce no pins. A map provider is not enabled in this build.
+
 First-aid pages contain clearly labeled review placeholders. The preparation guide contains draft general visit questions. There is no active emergency/contact action. Ask AI honestly reports that generated answers are unavailable and offers reading/search. Fictional listings and draft guidance are excluded by the public catalog selector.
 
 ## Checks
@@ -32,6 +36,6 @@ First-aid pages contain clearly labeled review placeholders. The preparation gui
 npm run test:guest
 ```
 
-Tests cover the catalog publication boundary, combined filters, branch IDs, absent optional fields, storage hydration/concurrency/recovery/deletion and route history. They do not establish clinical review or native-device behavior.
+Tests cover the catalog publication boundary, combined filters, branch identity/evidence, coordinate candidates, absent optional fields, older saved-state compatibility, stale facility IDs, storage hydration/concurrency/recovery/deletion and Back from Find care/Saved. They do not establish clinical review or native-device behavior.
 
 Install privately on an Android handset. With airplane mode enabled, cold-launch without Metro; save/reopen the guide and checklist, force-stop and relaunch, filter facilities and open both same-name branches. Check system back, empty results, First aid, AI fallback, larger text and image crops. Restore connectivity and confirm that fictional/offline behavior remains. Inspect the signed APK's actual identity, permissions and embedded inputs before transfer.
