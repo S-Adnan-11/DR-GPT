@@ -6,6 +6,7 @@ const date = (value) => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(
 const https = (value) => typeof value === 'string' && /^https:\/\/[^\s/?#]+(?:[/?#][^\s]*)?$/.test(value);
 const check = (condition, message) => { if (!condition) throw new Error(message); };
 const normalized = (value = '') => String(value).trim().toLowerCase();
+const usableCoordinates = (point) => Boolean(point && Number.isFinite(point.latitude) && Math.abs(point.latitude) <= 90 && Number.isFinite(point.longitude) && Math.abs(point.longitude) <= 180);
 
 function validateGuide(guide) {
   check(nonempty(guide.title) && nonempty(guide.summary) && textList(guide.topics) && guide.topics.length > 0, 'Guide metadata is incomplete.');
@@ -29,10 +30,8 @@ function validateFacility(facility) {
     if (source.kind !== 'fixture') check(https(source.url) && date(source.checkedAt), 'Real facility sources need an HTTPS URL and check date.');
   }
   if (hasOwn(facility, 'serviceTags')) check(textList(facility.serviceTags), 'Unknown services must be omitted.');
-  if (hasOwn(facility, 'coordinates')) {
-    const point = facility.coordinates;
-    check(point && Number.isFinite(point.latitude) && Math.abs(point.latitude) <= 90 && Number.isFinite(point.longitude) && Math.abs(point.longitude) <= 180, 'Facility coordinates are invalid.');
-  }
+  if (hasOwn(facility, 'branchLabel')) check(nonempty(facility.branchLabel), 'Facility branch label must be supplied or omitted.');
+  if (hasOwn(facility, 'coordinates')) check(usableCoordinates(facility.coordinates), 'Facility coordinates are invalid.');
   for (const field of ['contactUrl', 'bookingUrl']) {
     if (hasOwn(facility, field)) check(https(facility[field]), `Facility ${field} must be an official HTTPS destination.`);
   }
@@ -43,7 +42,7 @@ function validateFacility(facility) {
   }
   if (facility.status === 'published') {
     check(facility.sources.every((source) => source.kind !== 'fixture'), 'Fictional sources cannot support a published facility.');
-    const fields = ['name', 'facilityType', 'area', 'address', ...['serviceTags', 'coordinates', 'hours', 'contactUrl', 'bookingUrl'].filter((field) => hasOwn(facility, field))];
+    const fields = ['name', 'facilityType', 'area', 'address', ...['branchLabel', 'serviceTags', 'coordinates', 'hours', 'contactUrl', 'bookingUrl'].filter((field) => hasOwn(facility, field))];
     for (const field of fields) {
       check(facility.sources.some((source) => source.fields.includes(field) &&
         (!['serviceTags', 'hours', 'contactUrl', 'bookingUrl'].includes(field) || source.kind === 'official')), `Published facility ${field} needs supporting evidence; services and contact details need an official source.`);
@@ -71,11 +70,19 @@ function validateCatalog(catalog) {
 function filterFacilities(facilities, { query = '', area = '', facilityType = '', service = '' } = {}) {
   const term = normalized(query);
   return facilities.filter((facility) =>
-    (!term || [facility.name, facility.address, facility.area, facility.facilityType, ...(facility.serviceTags || [])].some((text) => normalized(text).includes(term))) &&
+    (!term || [facility.name, facility.branchLabel, facility.address, facility.area, facility.facilityType, ...(facility.serviceTags || [])].some((text) => normalized(text).includes(term))) &&
     (!normalized(area) || normalized(facility.area) === normalized(area)) &&
     (!normalized(facilityType) || normalized(facility.facilityType) === normalized(facilityType)) &&
     (!normalized(service) || (facility.serviceTags || []).some((tag) => normalized(tag) === normalized(service)))
   );
+}
+
+// A location preview must use the same branch IDs as the list. Drafts and
+// fictional records cannot become pins, even if malformed input adds a point.
+function locationCandidates(facilities) {
+  return facilities.filter((facility) => facility.status === 'published' && nonempty(facility.id) && usableCoordinates(facility.coordinates) &&
+    facility.sources?.some((source) => ['official', 'registration', 'independent'].includes(source.kind) && source.fields?.includes('coordinates') && https(source.url) && date(source.checkedAt)))
+    .map((facility) => ({ id: facility.id, name: facility.name, address: facility.address, coordinates: { ...facility.coordinates } }));
 }
 
 function searchGuides(guides, query = '') {
@@ -94,4 +101,4 @@ function selectPublicCatalog(catalog) {
   });
 }
 
-module.exports = { validateCatalog, filterFacilities, searchGuides, selectPublicCatalog };
+module.exports = { validateCatalog, filterFacilities, locationCandidates, searchGuides, selectPublicCatalog };

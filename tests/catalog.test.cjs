@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fixture = require('../src/catalog/catalog.json');
-const { validateCatalog, filterFacilities, searchGuides, selectPublicCatalog } = require('../src/catalog/catalog');
+const { validateCatalog, filterFacilities, locationCandidates, searchGuides, selectPublicCatalog } = require('../src/catalog/catalog');
 const copy = () => JSON.parse(JSON.stringify(fixture));
 
 test('the bundled catalog is explicitly fictional and has no callable destinations', () => {
@@ -56,7 +56,7 @@ test('published records need field evidence and registration alone cannot establ
   catalog.facilities = [catalog.facilities[0]];
   const facility = catalog.facilities[0];
   facility.id = 'review-example'; facility.status = 'published';
-  facility.sources = [{ id: 'source-example', kind: 'registration', url: 'https://example.invalid/registration', checkedAt: '2026-11-08', fields: ['name', 'address', 'area', 'facilityType', 'serviceTags'] }];
+  facility.sources = [{ id: 'source-example', kind: 'registration', url: 'https://example.invalid/registration', checkedAt: '2026-11-08', fields: ['name', 'branchLabel', 'address', 'area', 'facilityType', 'serviceTags'] }];
   assert.throws(() => validateCatalog(catalog), /serviceTags/);
   facility.sources.push({ id: 'official-example', kind: 'official', url: 'https://example.invalid/services', checkedAt: '2026-11-08', fields: ['serviceTags'] });
   assert.equal(validateCatalog(catalog), catalog);
@@ -87,4 +87,28 @@ test('a draft catalog can hold real unpublished records without exposing them', 
   assert.deepEqual(selectPublicCatalog(catalog).facilities, []);
   catalog.facilities[0].status = 'published';
   assert.throws(() => validateCatalog(catalog), /facilityType/);
+});
+
+test('branch labels remain searchable with combined filters and require field evidence', () => {
+  assert.deepEqual(filterFacilities(fixture.facilities, { query: 'sample area b branch', area: 'Sample area B', facilityType: 'Clinic', service: 'Dental care' }).map((f) => f.id), ['fixture-harbour-clinic-b']);
+  const catalog = copy(); catalog.snapshot.kind = 'published'; catalog.guides = []; catalog.firstAid = [];
+  catalog.facilities = [{ ...catalog.facilities[0], id:'contract-branch', status:'published', sources:[{id:'contract-source',kind:'official',url:'https://example.invalid/branch',checkedAt:'2026-11-10',fields:['name','address','area','facilityType','serviceTags']}] }];
+  assert.throws(() => validateCatalog(catalog), /branchLabel/);
+  catalog.facilities[0].sources[0].fields.push('branchLabel');
+  assert.equal(validateCatalog(catalog), catalog);
+  catalog.facilities[0].branchLabel = '';
+  assert.throws(() => validateCatalog(catalog), /branch label/);
+});
+
+test('location candidates preserve branch IDs and exclude missing, invalid or unsourced points', () => {
+  assert.deepEqual(locationCandidates(fixture.facilities), []);
+  const branch = {...fixture.facilities[0],status:'published',coordinates:{latitude:6.5,longitude:3.3},sources:[{id:'contract-map',kind:'official',url:'https://example.invalid/position',checkedAt:'2026-11-10',fields:['coordinates']}]};
+  const candidates = locationCandidates([branch, {...fixture.facilities[1],status:'published'}]);
+  assert.deepEqual(candidates.map((f)=>f.id), ['fixture-harbour-clinic-a']);
+  assert.equal(candidates[0].address, branch.address);
+  candidates[0].coordinates.latitude = 0; assert.equal(branch.coordinates.latitude,6.5);
+  for (const point of [undefined,null,{latitude:'6.5',longitude:3.3},{latitude:NaN,longitude:3.3},{latitude:6.5,longitude:Infinity},{latitude:91,longitude:3.3},{latitude:6.5,longitude:-181}]) assert.deepEqual(locationCandidates([{...branch,coordinates:point}]),[]);
+  for (const change of [{status:'fixture'},{status:'draft'},{sources:[]},{sources:[{...branch.sources[0],fields:['address']}]},{sources:[{...branch.sources[0],checkedAt:'2026-02-30'}]}]) assert.deepEqual(locationCandidates([{...branch,...change}]),[]);
+  const catalog=copy();catalog.snapshot.kind='draft';catalog.facilities=[{...branch,id:'contract-position',status:'draft',coordinates:{latitude:6.5,longitude:181}}];
+  assert.throws(()=>validateCatalog(catalog),/coordinates/);
 });

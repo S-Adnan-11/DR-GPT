@@ -93,3 +93,53 @@ test('back navigation preserves details, branch IDs and the four tab destination
   assert.equal(router.navigate(history, { name: 'profile' }), history);
   assert.equal(router.back([HOME]).length, 1);
 });
+
+test('older guide and checklist saves survive when the facility collection is absent', async () => {
+  const storage=memory();
+  storage.values.set(STORAGE_KEY,JSON.stringify({version:1,guides:['prepare-visit'],checklist:['question-2']}));
+  const current=store(storage), before=await current.load();
+  assert.equal(before.status,'ready');assert.deepEqual(before.guides,['prepare-visit']);assert.deepEqual(before.checklist,['question-2']);assert.deepEqual(before.facilities,[]);
+  await current.toggle('facilities','fixture-harbour-clinic-a');
+  const after=await store(storage).load();
+  assert.deepEqual(after.guides,before.guides);assert.deepEqual(after.checklist,before.checklist);assert.deepEqual(after.facilities,['fixture-harbour-clinic-a']);
+});
+
+test('same-name facilities save independently and removing one preserves the other after relaunch', async () => {
+  const storage=memory(), current=store(storage);
+  await current.toggle('guides','prepare-visit');await current.toggle('checklist','question-0');
+  await current.toggle('facilities','fixture-harbour-clinic-a');await current.toggle('facilities','fixture-harbour-clinic-b');
+  await current.toggle('facilities','fixture-harbour-clinic-a');
+  const reopened=await store(storage).load();
+  assert.deepEqual(reopened.facilities,['fixture-harbour-clinic-b']);assert.deepEqual(reopened.guides,['prepare-visit']);assert.deepEqual(reopened.checklist,['question-0']);
+});
+
+test('stale facility IDs have a removable unavailable state without losing guide or checklist IDs', async () => {
+  const storage=memory();
+  storage.values.set(STORAGE_KEY,JSON.stringify({version:1,guides:['prepare-visit'],facilities:['fixture-retired','fixture-harbour-clinic-b','fixture-retired','not an ID'],checklist:['question-1']}));
+  const current=store(storage), loaded=await current.load();
+  assert.deepEqual(loaded.facilities,['fixture-harbour-clinic-b']);assert.deepEqual(loaded.unavailableFacilities,['fixture-retired']);assert.equal(loaded.status,'ready');
+  const again=await store(storage).load();assert.deepEqual(again.unavailableFacilities,loaded.unavailableFacilities);
+  assert.throws(()=>current.toggle('facilities','fixture-retired'),/known guest/);
+  await current.toggle('checklist','question-2');
+  assert.deepEqual(JSON.parse(storage.values.get(STORAGE_KEY)).facilities,['fixture-retired','fixture-harbour-clinic-b']);
+  await current.removeUnavailableFacilities();
+  const reopened=await store(storage).load();assert.deepEqual(reopened.unavailableFacilities,[]);assert.deepEqual(reopened.facilities,loaded.facilities);assert.deepEqual(reopened.guides,loaded.guides);assert.deepEqual(reopened.checklist,['question-1','question-2']);
+  assert.deepEqual(Object.keys(JSON.parse(storage.values.get(STORAGE_KEY))).sort(),['checklist','facilities','guides','version']);
+});
+
+test('clearing all saved items also clears stale IDs and keeps the checklist', async () => {
+  const storage=memory();storage.values.set(STORAGE_KEY,JSON.stringify({version:1,guides:['prepare-visit'],facilities:['fixture-retired'],checklist:['question-1']}));
+  const current=store(storage);await current.clearSaved();const reopened=await store(storage).load();
+  assert.deepEqual(reopened.guides,[]);assert.deepEqual(reopened.facilities,[]);assert.deepEqual(reopened.unavailableFacilities,[]);assert.deepEqual(reopened.checklist,['question-1']);
+});
+
+test('facility back returns to its Find Care or Saved origin and highlights that tab', () => {
+  const router=createRouter(catalog);
+  for(const origin of ['care','saved']) {
+    const parent=router.navigate([HOME],{name:origin});
+    let history=router.navigate(parent,{name:'facility',id:'fixture-harbour-clinic-b'});
+    assert.equal(router.activeTab(history.at(-1),history),origin);
+    history=router.navigate(history,{name:'prepare'});assert.equal(router.back(history).at(-1).id,'fixture-harbour-clinic-b');
+    assert.deepEqual(router.back(router.back(history)),parent);
+  }
+});

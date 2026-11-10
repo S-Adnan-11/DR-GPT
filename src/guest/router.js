@@ -19,7 +19,9 @@ function createRouter(catalog) {
     return previous >= 0 ? history.slice(0, previous + 1) : [...history, next];
   }
   const back = (history) => history.length > 1 ? history.slice(0, -1) : history;
-  const activeTab = (route) => ({ guide: 'learn', topic: 'learn', facility: 'care', prepare: 'saved' }[route.name] || (TABS.includes(route.name) ? route.name : null));
+  const activeTab = (route, history = []) => route.name === 'facility'
+    ? [...history].reverse().find((item) => ['care', 'saved'].includes(item.name))?.name || 'care'
+    : ({ guide: 'learn', topic: 'learn', prepare: 'saved' }[route.name] || (TABS.includes(route.name) ? route.name : null));
   return { navigate, back, activeTab };
 }
 

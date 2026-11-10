@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "snapshot": {
     "kind": "fixture",
-    "updatedAt": "2026-11-08",
+    "updatedAt": "2026-11-10",
     "coverage": "Fictional facilities in Sample area A and Sample area B. No live care listings."
   },
   "guides": [
@@ -31,21 +31,23 @@
       "id": "fixture-harbour-clinic-a",
       "status": "fixture",
       "name": "Demo Harbour Clinic",
+      "branchLabel": "Sample area A branch",
       "facilityType": "Clinic",
       "area": "Sample area A",
       "address": "Example address A1 (fictional)",
       "serviceTags": ["General practice"],
-      "sources": [{ "id": "fixture-directory-a1", "kind": "fixture", "fields": ["name", "facilityType", "area", "address", "serviceTags"] }]
+      "sources": [{ "id": "fixture-directory-a1", "kind": "fixture", "fields": ["name", "branchLabel", "facilityType", "area", "address", "serviceTags"] }]
     },
     {
       "id": "fixture-harbour-clinic-b",
       "status": "fixture",
       "name": "Demo Harbour Clinic",
+      "branchLabel": "Sample area B branch",
       "facilityType": "Clinic",
       "area": "Sample area B",
       "address": "Example address B1 (fictional)",
       "serviceTags": ["Dental care"],
-      "sources": [{ "id": "fixture-directory-b1", "kind": "fixture", "fields": ["name", "facilityType", "area", "address", "serviceTags"] }]
+      "sources": [{ "id": "fixture-directory-b1", "kind": "fixture", "fields": ["name", "branchLabel", "facilityType", "area", "address", "serviceTags"] }]
     },
     {
       "id": "fixture-garden-hospital",
