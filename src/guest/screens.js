@@ -7,11 +7,11 @@ import s from './styles';
 const { filterFacilities, locationCandidates, searchGuides } = require('../catalog/catalog');
 const { QUESTIONS } = require('./store');
 
-export function Home({ go }) {
+export function Home({ go, catalog }) {
   return <>
     <Heading eyebrow="A good place to start">Your health,{ '\n' }at your pace.</Heading>
     <Paragraph muted>Understand a little more. Feel more prepared for what comes next.</Paragraph>
-    <View style={s.hero}><Picture source={illustrations.library} label="Original library photograph" /><View style={s.heroBody}>
+    <View style={s.hero}><GuideCover guide={catalog.guides.find((guide) => guide.id === 'prepare-visit')} /><View style={s.heroBody}>
       <Text style={[s.eyebrow, { color: '#c4d7ff' }]}>Start with a question</Text><Text accessibilityRole="header" style={s.heroHeading}>Make the most of your visit.</Text>
       <Text style={s.heroText}>A few questions can help you prepare for a conversation with care.</Text>
       <Button hero title="Open the preparation guide" onPress={() => go('guide', 'prepare-visit')} />
@@ -25,34 +25,47 @@ export function Home({ go }) {
   </>;
 }
 
+function reviewLabel(guide) {
+  return guide.legacy ? 'Legacy draft · Not reviewed' : guide.review.status === 'source-checked' ? 'Editorial source check' : guide.review.status === 'draft' ? 'Draft · Not reviewed' : 'Reviewed';
+}
+
+function GuideCover({ guide }) {
+  if (guide.images.length) return <Picture source={recordImage(guide)} decorative />;
+  return guide.cover ? <View style={s.guideCover}><Text style={s.coverStep}>{guide.cover.step}</Text><Text style={s.coverLabel}>{guide.cover.label}</Text></View> : null;
+}
+
 function GuideCard(props) {
   const { guide, go } = props;
-  const reviewLabel = guide.legacy ? 'Legacy draft · Not reviewed' : guide.review.status === 'draft' ? 'Draft · Not reviewed' : 'Reviewed';
   return <View style={s.card} testID={`guide-card-${guide.id}`}>
     <TouchableOpacity accessibilityRole="button" accessibilityHint="Open guide" onPress={() => go('guide', guide.id)} style={{ gap: 10 }}>
-      <Picture source={recordImage(guide)} decorative />
+      <GuideCover guide={guide} />
       <Text style={s.h3}>{guide.title}</Text><Paragraph muted small>{guide.summary}</Paragraph>
-      <Pill draft={guide.review.status === 'draft'}>{reviewLabel}</Pill>
+      <Pill draft={guide.review.status === 'draft'}>{reviewLabel(guide)}</Pill>
     </TouchableOpacity>
     <SaveButton {...props} kind="guides" id={guide.id} />
   </View>;
 }
 
 export function Learn(props) {
-  const { catalog, go, guideQuery, setGuideQuery, guideCategory, setGuideCategory } = props;
+  const { catalog, go, guideQuery, setGuideQuery, guideCategory, setGuideCategory, showLegacy, setShowLegacy } = props;
   const { fontScale } = useWindowDimensions();
-  const guides = searchGuides(catalog.guides, guideQuery, guideCategory);
-  const categories = [...new Set(catalog.guides.map((guide) => guide.category).filter(Boolean))].sort();
+  const library = catalog.guides.filter((guide) => showLegacy ? Boolean(guide.legacy) : !guide.legacy);
+  const guides = searchGuides(library, guideQuery, guideCategory);
+  const categories = [...new Set(library.map((guide) => guide.category).filter(Boolean))].sort();
+  const legacyCount = catalog.guides.filter((guide) => guide.legacy).length;
   return <>
     <Heading eyebrow="Learn">A little more understanding.</Heading>
-    <Paragraph muted small>Read offline and save on this device. Legacy articles are retained drafts awaiting editorial and clinical review.</Paragraph>
+    <Paragraph muted small>Read offline and save on this device. Questions to help you prepare, discuss a test and confirm what happens next.</Paragraph>
+    <Subheading>{showLegacy ? 'Legacy draft library' : 'For your healthcare visit'}</Subheading>
+    {showLegacy ? <Notice>These 24 retained articles await editorial and clinical review. Existing saves still open here.</Notice> : null}
+    {legacyCount ? <TextLink title={showLegacy ? 'Back to the visit collection' : `Browse legacy drafts (${legacyCount})`} onPress={() => { setShowLegacy(!showLegacy); setGuideCategory(''); }} /> : null}
     <Text style={s.label}>Search guides</Text><TextInput accessibilityLabel="Search guides" placeholder="Title, description or topic" placeholderTextColor="#68758b" value={guideQuery} onChangeText={setGuideQuery} style={s.input} maxLength={100} autoCorrect={false} />
     {guideQuery ? <TextLink title="Clear guide search" onPress={() => setGuideQuery('')} /> : null}
     <Text style={s.label}>Guide category</Text><View style={s.pickerBox}><Picker accessibilityLabel="Guide category" selectedValue={guideCategory} onValueChange={setGuideCategory} style={[s.picker, { minHeight: Math.max(52, 44 * fontScale) }]}><Picker.Item label="All categories" value="" />{categories.map((category) => <Picker.Item key={category} label={category} value={category} />)}</Picker></View>
     <Text accessibilityLiveRegion="polite" style={[s.text, s.muted, s.small]}>{guides.length} {guides.length === 1 ? 'guide' : 'guides'}</Text>
     {guides.length ? guides.map((guide) => <GuideCard key={guide.id} {...props} guide={guide} />) : <View style={s.empty}><Subheading>No matching guides</Subheading><Paragraph>Search checks titles, descriptions and topics in this bundled library. Try another word or category.</Paragraph><Button secondary title="Show all guides" onPress={() => { setGuideQuery(''); setGuideCategory(''); }} /></View>}
-    <Subheading>Explore a topic</Subheading><View style={s.topics}>{topics.map((topic) => <TouchableOpacity key={topic.id} accessibilityRole="button" onPress={() => go('topic', topic.id)} style={[s.topic, fontScale > 1.4 && { flexBasis: '100%' }]}><View style={[s.picture, s.topicImage]}><Image source={illustrations[topic.id]} accessible={false} resizeMode="cover" style={s.fillImage} /></View><Text style={s.topicText}>{topic.title}</Text></TouchableOpacity>)}</View>
-    <Paragraph muted small>Original topic illustrations. Articles are available as private review drafts.</Paragraph>
+    {showLegacy ? <><Subheading>Explore a legacy topic</Subheading><View style={s.topics}>{topics.map((topic) => <TouchableOpacity key={topic.id} accessibilityRole="button" onPress={() => go('topic', topic.id)} style={[s.topic, fontScale > 1.4 && { flexBasis: '100%' }]}><View style={[s.picture, s.topicImage]}><Image source={illustrations[topic.id]} accessible={false} resizeMode="cover" style={s.fillImage} /></View><Text style={s.topicText}>{topic.title}</Text></TouchableOpacity>)}</View>
+    <Paragraph muted small>Original topic illustrations. Articles are available as private review drafts.</Paragraph></> : null}
   </>;
 }
 
@@ -75,13 +88,15 @@ export function Guide(props) {
   const guide = props.catalog.guides.find((item) => item.id === props.route.id);
   if (!guide) return <><Heading>Guide unavailable</Heading><Paragraph>This guide is no longer in the bundled library.</Paragraph><Button title="Open Saved" onPress={() => props.go('saved')} /></>;
   return <>
-    <Heading eyebrow="Learn · Offline guide">{guide.title}</Heading><Pill draft={guide.review.status === 'draft'}>{guide.legacy ? 'Legacy draft · Not reviewed' : guide.review.status === 'draft' ? 'Draft · Not reviewed' : 'Reviewed'}</Pill><Paragraph muted>{guide.summary}</Paragraph>
-    {guide.legacy ? <Notice>Retained legacy draft. Health claims and inherited references have not been checked for this build. This material is awaiting editorial and qualified clinical review. Old resource actions are shown as text.</Notice> : <Picture source={recordImage(guide)} label="Library shelves, original article-header photograph" article />}
+    <Heading eyebrow="Learn · Offline guide">{guide.title}</Heading><Pill draft={guide.review.status === 'draft'}>{reviewLabel(guide)}</Pill><Paragraph muted>{guide.summary}</Paragraph>
+    {guide.legacy ? <Notice>Retained legacy draft. Health claims and inherited references have not been checked for this build. This material is awaiting editorial and qualified clinical review. Old resource actions are shown as text.</Notice> : <GuideCover guide={guide} />}
     <SaveButton {...props} kind="guides" id={guide.id} />
     <ArticleBody body={guide.body} />
     {!guide.legacy && guide.review.status === 'draft' ? <Notice>This general preparation draft has not had a content review.</Notice> : null}
-    <Subheading>Sources & review</Subheading><Paragraph muted small>Review date: {guide.review.reviewedAt || 'not reviewed'}.</Paragraph>
-    {guide.sources.length ? <><Paragraph muted small>{guide.legacy ? 'References inherited from the original article; availability, relevance and claims are unverified. External actions remain unavailable offline.' : 'Attached references:'}</Paragraph>{guide.sources.map((source) => <View key={source.url} style={{ gap: 4 }}><Paragraph small>{source.title}</Paragraph><Text selectable style={[s.text, s.small, s.sourceUrl]}>{source.url}</Text>{source.checkedAt ? <Paragraph muted small>Checked: {source.checkedAt}</Paragraph> : null}</View>)}</> : <Paragraph muted small>No references attached yet.</Paragraph>}
+    <Subheading>Sources & review</Subheading>
+    {guide.review.status === 'source-checked' ? <Paragraph muted small>Editorial source check: {guide.review.checkedAt}. The prompts were checked against the pages below. This is not a clinical review.</Paragraph> : <Paragraph muted small>Review date: {guide.review.reviewedAt || 'not reviewed'}.</Paragraph>}
+    {guide.sources.length ? <><Paragraph muted small>{guide.legacy ? 'References inherited from the original article; availability, relevance and claims are unverified. External actions remain unavailable offline.' : 'Source details are available offline. Links are shown for reference; this offline build does not open external pages.'}</Paragraph>{guide.sources.map((source) => <View key={source.url} style={{ gap: 4 }}>{source.publisher ? <Paragraph small>{source.publisher}</Paragraph> : null}<Paragraph small>{source.title}</Paragraph><Text selectable style={[s.text, s.small, s.sourceUrl]}>{source.url}</Text>{source.checkedAt ? <Paragraph muted small>Editorial source check: {source.checkedAt}</Paragraph> : null}</View>)}</> : <Paragraph muted small>No references attached yet.</Paragraph>}
+    {guide.relatedGuides?.length ? <><Subheading>Keep preparing</Subheading>{guide.relatedGuides.map((id) => props.catalog.guides.find((item) => item.id === id)).filter(Boolean).map((related) => <CardLink key={related.id} title={related.title} description={related.summary} onPress={() => props.go('guide', related.id)} />)}</> : null}
     <View style={s.rule} /><CardLink title="Your visit checklist" description="Keep a short list of general questions." icon="✓" onPress={() => props.go('prepare')} />
     <CardLink title="Ask AI about this guide" description="AI is unavailable. Continue reading or searching." icon="✧" onPress={() => props.go('ask')} />
   </>;
@@ -152,7 +167,7 @@ export function Saved({ catalog, saved, go, update, busy }) {
   const guides = catalog.guides.filter((item) => saved?.guides.includes(item.id));
   const facilities = catalog.facilities.filter((item) => saved?.facilities.includes(item.id));
   return <><Heading eyebrow="Saved">Keep what helps you.</Heading><Paragraph muted>Saved on this device. No account or sync.</Paragraph><Subheading>Guides</Subheading>
-    {guides.length ? guides.map((guide) => <CardLink key={guide.id} title={guide.title} description={`${guide.review.status === 'draft' ? 'Draft · ' : ''}Available offline`} image={recordImage(guide)} onPress={() => go('guide', guide.id)} />) : <Paragraph muted small>No saved guides yet.</Paragraph>}
+    {guides.length ? guides.map((guide) => <CardLink key={guide.id} title={guide.title} description={`${reviewLabel(guide)} · Available offline`} image={recordImage(guide)} onPress={() => go('guide', guide.id)} />) : <Paragraph muted small>No saved guides yet.</Paragraph>}
     {saved?.unavailableGuides.length ? <View style={s.card}><Text style={s.h3}>Saved guide unavailable</Text><Paragraph muted small>{saved.unavailableGuides.length} saved {saved.unavailableGuides.length === 1 ? 'guide is' : 'guides are'} no longer in this library. Other saved items and your checklist are kept.</Paragraph><Button secondary disabled={busy} title="Remove unavailable guides" onPress={() => update('removeUnavailableGuides')} /></View> : null}
     <Subheading>Facilities</Subheading>{facilities.length ? facilities.map((facility) => <FacilityCard key={facility.id} facility={facility} go={go} />) : <Paragraph muted small>No saved facilities yet.</Paragraph>}
     {saved?.unavailableFacilities.length ? <View style={s.card}><Text style={s.h3}>Saved facility unavailable</Text><Paragraph muted small>{saved.unavailableFacilities.length} saved {saved.unavailableFacilities.length === 1 ? 'facility is' : 'facilities are'} no longer in this directory. Other saved items and your checklist are kept.</Paragraph><Button secondary disabled={busy} title="Remove unavailable facilities" onPress={() => update('removeUnavailableFacilities')} /></View> : null}
