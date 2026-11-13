@@ -66,7 +66,8 @@ test('unknown IDs and arbitrary personal fields cannot enter saved state', async
   storage.values.set(STORAGE_KEY, JSON.stringify({ version: 1, guides: ['prepare-visit', 'unknown'], facilities: [], checklist: [], healthHistory: 'Discard me' }));
   await instance.toggle('checklist', 'question-0');
   const saved = JSON.parse(storage.values.get(STORAGE_KEY));
-  assert.equal(saved.healthHistory, undefined); assert.deepEqual(saved.guides, ['prepare-visit']);
+  assert.equal(saved.healthHistory, undefined); assert.deepEqual(saved.guides, ['prepare-visit', 'unknown']);
+  assert.deepEqual((await instance.load()).unavailableGuides, ['unknown']);
 });
 
 test('invalid runtime configuration prevents local reads and writes', async () => {
@@ -141,5 +142,28 @@ test('facility back returns to its Find Care or Saved origin and highlights that
     assert.equal(router.activeTab(history.at(-1),history),origin);
     history=router.navigate(history,{name:'prepare'});assert.equal(router.back(history).at(-1).id,'fixture-harbour-clinic-b');
     assert.deepEqual(router.back(router.back(history)),parent);
+  }
+});
+
+test('stale guide saves survive writes and can be removed without losing other state', async () => {
+  const storage=memory();storage.values.set(STORAGE_KEY,JSON.stringify({version:1,guides:['prepare-visit','retired-guide','retired-guide','invalid id'],facilities:['fixture-harbour-clinic-b','fixture-retired'],checklist:['question-1']}));
+  const current=store(storage), before=await current.load();
+  assert.deepEqual(before.guides,['prepare-visit']);assert.deepEqual(before.unavailableGuides,['retired-guide']);
+  assert.throws(()=>current.toggle('guides','retired-guide'),/known guest/);
+  await current.toggle('checklist','question-2');
+  assert.deepEqual(JSON.parse(storage.values.get(STORAGE_KEY)).guides,['prepare-visit','retired-guide']);
+  await current.removeUnavailableGuides();const after=await store(storage).load();
+  assert.deepEqual(after.unavailableGuides,[]);assert.deepEqual(after.guides,before.guides);
+  assert.deepEqual(after.facilities,before.facilities);assert.deepEqual(after.unavailableFacilities,before.unavailableFacilities);
+  assert.deepEqual(after.checklist,['question-1','question-2']);
+});
+
+test('guide navigation preserves its Saved or Learn origin and rejects unavailable IDs', () => {
+  const router=createRouter(catalog);
+  for(const origin of ['learn','saved']) {
+    const parent=router.navigate([HOME],{name:origin});
+    const history=router.navigate(parent,{name:'guide',id:'prepare-visit'});
+    assert.equal(router.activeTab(history.at(-1),history),origin);assert.deepEqual(router.back(history),parent);
+    assert.equal(router.navigate(history,{name:'guide',id:'retired-guide'}),history);
   }
 });

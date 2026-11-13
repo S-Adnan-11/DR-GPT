@@ -14,7 +14,7 @@ function createGuestStore({ storage, catalog, assertEnabled }) {
     checklist: new Set(QUESTIONS.map((question) => question.id)),
   };
   let state = empty(), status = 'ready', loading, writes = Promise.resolve();
-  const snapshot = () => ({ ...state, guides: [...state.guides], facilities: state.facilities.filter((id) => allowed.facilities.has(id)), unavailableFacilities: state.facilities.filter((id) => !allowed.facilities.has(id)), checklist: [...state.checklist], status });
+  const snapshot = () => ({ ...state, guides: state.guides.filter((id) => allowed.guides.has(id)), unavailableGuides: state.guides.filter((id) => !allowed.guides.has(id)), facilities: state.facilities.filter((id) => allowed.facilities.has(id)), unavailableFacilities: state.facilities.filter((id) => !allowed.facilities.has(id)), checklist: [...state.checklist], status });
 
   function ready() {
     assertEnabled();
@@ -27,7 +27,7 @@ function createGuestStore({ storage, catalog, assertEnabled }) {
         if (parsed?.version === 1 && !Object.prototype.hasOwnProperty.call(parsed, 'facilities')) parsed.facilities = [];
         if (parsed?.version !== 1 || !Object.keys(allowed).every((key) => Array.isArray(parsed[key]) && parsed[key].every((id) => typeof id === 'string'))) throw new Error('Unreadable saved items.');
         state = { version: 1 };
-        for (const key of Object.keys(allowed)) state[key] = [...new Set(parsed[key].filter((id) => key === 'facilities' ? savedId(id) : allowed[key].has(id)))];
+        for (const key of Object.keys(allowed)) state[key] = [...new Set(parsed[key].filter((id) => key === 'checklist' ? allowed[key].has(id) : savedId(id)))];
       } catch {
         state = empty(); status = 'unreadable';
       }
@@ -57,6 +57,7 @@ function createGuestStore({ storage, catalog, assertEnabled }) {
     },
     clearSaved: () => change(() => { state.guides = []; state.facilities = []; }),
     removeUnavailableFacilities: () => change(() => { state.facilities = state.facilities.filter((id) => allowed.facilities.has(id)); }),
+    removeUnavailableGuides: () => change(() => { state.guides = state.guides.filter((id) => allowed.guides.has(id)); }),
     clearChecklist: () => change(() => { state.checklist = []; }),
   };
 }

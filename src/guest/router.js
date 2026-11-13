@@ -19,8 +19,8 @@ function createRouter(catalog) {
     return previous >= 0 ? history.slice(0, previous + 1) : [...history, next];
   }
   const back = (history) => history.length > 1 ? history.slice(0, -1) : history;
-  const activeTab = (route, history = []) => route.name === 'facility'
-    ? [...history].reverse().find((item) => ['care', 'saved'].includes(item.name))?.name || 'care'
+  const activeTab = (route, history = []) => ['facility', 'guide'].includes(route.name)
+    ? [...history].reverse().find((item) => [route.name === 'facility' ? 'care' : 'learn', 'saved'].includes(item.name))?.name || (route.name === 'facility' ? 'care' : 'learn')
     : ({ guide: 'learn', topic: 'learn', prepare: 'saved' }[route.name] || (TABS.includes(route.name) ? route.name : null));
   return { navigate, back, activeTab };
 }
