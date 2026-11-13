@@ -44,7 +44,7 @@ Push-Location $sourceRoot
 try {
     $files = @(git ls-files --cached --others --exclude-standard)
     if ($LASTEXITCODE -ne 0) { throw 'Cannot enumerate source inputs.' }
-    $rootInputs = @('App.js','index.js','app.config.js','package.json','package-lock.json','babel.config.js','metro.config.js','react-native.config.js','scripts/guest-profile.cjs','scripts/guest-assets.cjs','scripts/guest-content.cjs')
+    $rootInputs = @('App.js','index.js','app.config.js','package.json','package-lock.json','babel.config.js','metro.config.js','react-native.config.js','scripts/guest-profile.cjs','scripts/guest-assets.cjs','scripts/guest-content.cjs','scripts/public-content.cjs')
     $assetInputs = @('assets/icon.png','assets/logo.png','assets/adaptive-icon.png',
         'assets/LibraryPhotos/medical_library.jpg','assets/LibraryPhotos/sleep.jpg','assets/LibraryPhotos/nutrition2.jpeg','assets/LibraryPhotos/mental_health.jpg','assets/LibraryPhotos/fitness3.jpg',
         'assets/FirstAidIcons/first_aid.jpg','assets/FirstAidIcons/cpr-icon.png','assets/FirstAidIcons/burn-icon.png','assets/FirstAidIcons/poison-icon.png','assets/FirstAidIcons/fracture-icon.png')

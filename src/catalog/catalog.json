@@ -8,16 +8,168 @@
   "guides": [
     {
       "id": "prepare-visit",
-      "title": "Preparing questions for a visit",
-      "summary": "A short place to start when planning what to ask.",
-      "topics": ["visit-preparation"],
-      "body": [
-        { "heading": "What would you like to understand?", "text": "Think about the questions you want to ask. You can bring your own notes to the visit." },
-        { "heading": "Questions to consider", "text": "What should I understand before I leave? What happens next? Who should I contact if I have another question?" }
+      "title": "Prepare for a healthcare visit",
+      "summary": "Choose your main questions and gather what you want to discuss with the care team.",
+      "category": "Care & medicines",
+      "topics": [
+        "visit-preparation",
+        "healthcare-visit"
       ],
-      "sources": [],
-      "review": { "status": "draft", "reviewedAt": null },
-      "images": ["legacy-libraryphotos-medical_library-jpg"]
+      "body": [
+        {
+          "heading": "Choose what matters most",
+          "text": "Pick the questions you most want answered. Bring a short list so you can refer to it during the visit."
+        },
+        {
+          "heading": "Make a note of your concerns",
+          "text": "If you have a concern, note when it started and what you want the care team to know. Bring those notes with you."
+        },
+        {
+          "heading": "Bring your medicines list",
+          "text": "Bring a list of medicines, vitamins, herbal products and other supplements you take, along with any known allergies, to discuss with the care team."
+        },
+        {
+          "heading": "Check with the facility",
+          "text": "Check the facility’s appointment instructions. Ask its staff if anything is unclear or you need help preparing."
+        }
+      ],
+      "sources": [
+        {
+          "publisher": "MedlinePlus · U.S. National Library of Medicine",
+          "title": "Talking With Your Doctor",
+          "url": "https://medlineplus.gov/talkingwithyourdoctor.html",
+          "checkedAt": "2026-11-13"
+        },
+        {
+          "publisher": "NHS",
+          "title": "Outpatients and day patients",
+          "url": "https://www.nhs.uk/nhs-services/hospitals/going-into-hospital/outpatients-and-day-patients/",
+          "checkedAt": "2026-11-13"
+        }
+      ],
+      "review": {
+        "status": "source-checked",
+        "checkedAt": "2026-11-13",
+        "reviewedAt": null
+      },
+      "images": [],
+      "relatedGuides": [
+        "test-questions",
+        "before-you-leave"
+      ],
+      "cover": {
+        "step": "01",
+        "label": "Before your visit"
+      }
+    },
+    {
+      "id": "test-questions",
+      "title": "Questions to ask about a test",
+      "summary": "Ask what a test is for, how to prepare and how to follow up on results.",
+      "category": "Care & medicines",
+      "topics": [
+        "visit-preparation",
+        "healthcare-visit"
+      ],
+      "body": [
+        {
+          "type": "heading",
+          "text": "Questions for your care team"
+        },
+        {
+          "type": "list",
+          "items": [
+            "What is this test for?",
+            "Does the facility have preparation instructions? Who can explain them to me?",
+            "When should I expect the results, and how will I receive them?",
+            "Which person or office should I contact if the results have not arrived by then?"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Ask your care team to explain anything unclear. Check the facility’s own instructions for your test and ask the team what your results mean."
+        }
+      ],
+      "sources": [
+        {
+          "publisher": "Agency for Healthcare Research and Quality (AHRQ)",
+          "title": "Be More Engaged in Your Healthcare",
+          "url": "https://www.ahrq.gov/questions/be-engaged/index.html",
+          "checkedAt": "2026-11-13"
+        },
+        {
+          "publisher": "NHS",
+          "title": "What to ask your doctor or other healthcare professional",
+          "url": "https://www.nhs.uk/nhs-services/gps/what-to-ask-your-doctor/",
+          "checkedAt": "2026-11-13"
+        }
+      ],
+      "review": {
+        "status": "source-checked",
+        "checkedAt": "2026-11-13",
+        "reviewedAt": null
+      },
+      "images": [],
+      "relatedGuides": [
+        "prepare-visit",
+        "before-you-leave"
+      ],
+      "cover": {
+        "step": "02",
+        "label": "When a test is discussed"
+      }
+    },
+    {
+      "id": "before-you-leave",
+      "title": "Before you leave your appointment",
+      "summary": "Confirm the next step, its timing and who can answer follow-up questions.",
+      "category": "Care & medicines",
+      "topics": [
+        "visit-preparation",
+        "healthcare-visit"
+      ],
+      "body": [
+        {
+          "heading": "Check the next step",
+          "text": "Ask what should happen next and when. Check whether you need to arrange another appointment or test, and who will arrange it."
+        },
+        {
+          "heading": "Ask for instructions you can take away",
+          "text": "Ask for written instructions where available. Check your understanding with the care team and ask them to explain anything unclear."
+        },
+        {
+          "heading": "Know who to contact",
+          "text": "Ask which number or office to use if you have questions after leaving. If a test was discussed, confirm how and when to get the results and whom to contact if they are delayed."
+        }
+      ],
+      "sources": [
+        {
+          "publisher": "Agency for Healthcare Research and Quality (AHRQ)",
+          "title": "Be More Engaged in Your Healthcare",
+          "url": "https://www.ahrq.gov/questions/be-engaged/index.html",
+          "checkedAt": "2026-11-13"
+        },
+        {
+          "publisher": "NHS",
+          "title": "What to ask your doctor or other healthcare professional",
+          "url": "https://www.nhs.uk/nhs-services/gps/what-to-ask-your-doctor/",
+          "checkedAt": "2026-11-13"
+        }
+      ],
+      "review": {
+        "status": "source-checked",
+        "checkedAt": "2026-11-13",
+        "reviewedAt": null
+      },
+      "images": [],
+      "relatedGuides": [
+        "prepare-visit",
+        "test-questions"
+      ],
+      "cover": {
+        "step": "03",
+        "label": "Before you head home"
+      }
     }
   ],
   "firstAid": [

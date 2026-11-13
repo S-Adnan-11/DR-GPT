@@ -27,14 +27,14 @@ test('every catalog guide saves and resolves by the same ID after relaunch along
   }
 });
 
-test('all 24 legacy topics and the unchanged preparation guide resolve by unique stable IDs', () => {
+test('all 24 legacy topics and the visit collection resolve by unique stable IDs', () => {
   const current = validateCatalog(catalog());
-  assert.equal(current.guides.length, 25);
+  assert.equal(current.guides.length, 27);
   assert.deepEqual(current.guides[0], base.guides[0]);
-  assert.equal(new Set(current.guides.map((guide) => guide.id)).size, 25);
-  assert.deepEqual(current.guides.slice(1).map((guide) => guide.id).sort(), Object.values(TOPICS).map(([id]) => id).sort());
+  assert.equal(new Set(current.guides.map((guide) => guide.id)).size, 27);
+  assert.deepEqual(current.guides.slice(base.guides.length).map((guide) => guide.id).sort(), Object.values(TOPICS).map(([id]) => id).sort());
   assert.deepEqual(current.firstAid, base.firstAid);
-  assert.deepEqual(selectPublicCatalog(current).guides, []);
+  assert.deepEqual(selectPublicCatalog(current).guides, base.guides);
 });
 
 // Independently compile the retained JSX to a React tree, without mounting it or
@@ -75,16 +75,16 @@ test('metadata search combines with categories and clear values restore all guid
   assert.deepEqual(searchGuides(guides, ' INSOMNIA ').map((guide)=>guide.id), ['sleep-health']);
   assert.deepEqual(searchGuides(guides, 'sleep', 'Life stages'), []);
   assert.equal(searchGuides(guides, '', 'Life stages').length, 5);
-  assert.equal(searchGuides(guides, '').length, 25);
+  assert.equal(searchGuides(guides, '').length, 27);
   assert.equal(searchGuides(guides, 'nothing-matches').length, 0);
 });
 
 test('malformed IDs and unknown article blocks or images cannot enter the catalog', () => {
   for (const id of ['', 'with spaces', '../escape', 'x'.repeat(129), null]) {
-    const current=catalog(); current.guides=[{...current.guides[1],id}]; assert.throws(()=>validateCatalog(current),/IDs/);
+    const current=catalog(); current.guides=[{...current.guides[3],id}]; assert.throws(()=>validateCatalog(current),/IDs/);
   }
   for (const block of [null, {type:'script',text:'x'}, {type:'list',items:[]}, {type:'paragraph',text:''}, {type:'image',imageId:'unknown',alt:'x',fit:'contain'}]) {
-    const current=catalog();current.guides=[{...current.guides[1],body:[block]}];assert.throws(()=>validateCatalog(current),/body/);
+    const current=catalog();current.guides=[{...current.guides[3],body:[block]}];assert.throws(()=>validateCatalog(current),/body/);
   }
   const duplicate=catalog();duplicate.guides.push(duplicate.guides[1]);assert.throws(()=>validateCatalog(duplicate),/unique/);
 });
