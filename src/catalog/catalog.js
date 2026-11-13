@@ -24,10 +24,16 @@ function validateGuide(guide) {
   check(Array.isArray(guide.body) && guide.body.every((block) => validBlock(block, guide.images)), 'Guide body is invalid.');
   if (hasOwn(guide, 'category')) check(nonempty(guide.category), 'Guide category is invalid.');
   check(Array.isArray(guide.sources) && guide.sources.every((source) => nonempty(source.title) && https(source.url)), 'Guide sources must identify HTTPS references.');
-  check(['draft', 'reviewed'].includes(guide.review?.status), 'Guide review status is invalid.');
+  check(['draft', 'source-checked', 'reviewed'].includes(guide.review?.status), 'Guide review status is invalid.');
+  if (hasOwn(guide, 'relatedGuides')) check(textList(guide.relatedGuides) && guide.relatedGuides.every(validId), 'Related guide IDs are invalid.');
+  if (hasOwn(guide, 'cover')) check(nonempty(guide.cover?.step) && nonempty(guide.cover?.label), 'Guide cover is invalid.');
+  if (guide.review.status === 'source-checked') {
+    check(!guide.legacy && guide.review.reviewedAt === null && date(guide.review.checkedAt) && guide.body.length > 0 && guide.sources.length > 0 &&
+      guide.sources.every((source) => nonempty(source.publisher) && date(source.checkedAt) && source.checkedAt === guide.review.checkedAt), 'Source-checked guides need dated publisher attribution and an editorial source check.');
+  }
   if (guide.review.status === 'reviewed') {
     check(date(guide.review.reviewedAt) && guide.sources.length > 0 && guide.body.length > 0, 'Reviewed guides need a review date, body and sources.');
-  } else {
+  } else if (guide.review.status === 'draft') {
     check(guide.review.reviewedAt === null, 'Draft guides must not claim a review date.');
   }
 }
@@ -72,9 +78,11 @@ function validateCatalog(catalog) {
       ids.add(record.id);
       validate(record);
       if (key === 'facilities') check(catalog.snapshot.kind === 'fixture' ? record.status === 'fixture' : record.status !== 'fixture', 'Snapshot and facility kinds must agree.');
-      if (catalog.snapshot.kind === 'published') check(key === 'facilities' ? record.status === 'published' : record.review.status === 'reviewed', 'Published snapshots cannot contain drafts.');
+      if (key === 'firstAid') check(record.review.status !== 'source-checked', 'First aid requires qualified review.');
+      if (catalog.snapshot.kind === 'published') check(key === 'facilities' ? record.status === 'published' : key === 'guides' ? ['source-checked', 'reviewed'].includes(record.review.status) : record.review.status === 'reviewed', 'Published snapshots cannot contain drafts.');
     }
   }
+  for (const guide of catalog.guides) check((guide.relatedGuides || []).every((id) => id !== guide.id && catalog.guides.some((item) => item.id === id)), 'Related guides must resolve in this catalog.');
   return catalog;
 }
 
@@ -107,7 +115,9 @@ function selectPublicCatalog(catalog) {
   return validateCatalog({
     schemaVersion: 1,
     snapshot: { ...catalog.snapshot, kind: 'published' },
-    guides: catalog.guides.filter((guide) => guide.review.status === 'reviewed'),
+    guides: catalog.guides.filter((guide) => ['reviewed', 'source-checked'].includes(guide.review.status)).map((guide) => ({ ...guide,
+      ...(guide.relatedGuides ? { relatedGuides: guide.relatedGuides.filter((id) => catalog.guides.some((item) => item.id === id && ['reviewed', 'source-checked'].includes(item.review.status))) } : {}),
+    })),
     firstAid: catalog.firstAid.filter((guide) => guide.review.status === 'reviewed'),
     facilities: catalog.facilities.filter((facility) => facility.status === 'published'),
   });

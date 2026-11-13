@@ -18,6 +18,7 @@ function GuestRoot() {
   const [saved, setSaved] = useState(null), [busy, setBusy] = useState(false), [feedback, setFeedback] = useState('');
   const [guideQuery, setGuideQuery] = useState('');
   const [guideCategory, setGuideCategory] = useState('');
+  const [showLegacy, setShowLegacy] = useState(false);
   const [filters, setFilters] = useState({ query: '', area: '', facilityType: '', service: '' });
   const store = useMemo(() => createGuestStore({ storage: AsyncStorage, catalog, assertEnabled: assertGuestMode }), []);
   const { fontScale } = useWindowDimensions();
@@ -58,7 +59,7 @@ function GuestRoot() {
       {saved?.status === 'unreadable' ? <Notice>Saved items could not be read. You can continue and save again.</Notice> : null}
       {saved?.status === 'session' ? <Notice>Device storage is unavailable. Changes last only while this app stays open.</Notice> : null}
       {feedback ? <Text accessibilityLiveRegion="polite" style={s.feedback}>{feedback}</Text> : null}
-      <Screen {...{ catalog, go, route, saved, busy, update, filters, setFilters, guideQuery, setGuideQuery, guideCategory, setGuideCategory }} />
+      <Screen {...{ catalog, go, route, saved, busy, update, filters, setFilters, guideQuery, setGuideQuery, guideCategory, setGuideCategory, showLegacy, setShowLegacy }} />
     </ScrollView>
     <View accessibilityRole="tablist" style={s.nav}>{tabs.map(([name, label, symbol]) => <TouchableOpacity key={name} accessibilityRole="tab" accessibilityLabel={label} aria-selected={active === name} onPress={() => go(name)} style={[s.tab, { width: fontScale > 1.4 ? '50%' : '25%' }]}><View style={[s.tabInner, active === name && s.activeTab]}><Text accessible={false} style={[s.tabIcon, active === name && s.activeText]}>{symbol}</Text><Text style={[s.tabText, active === name && s.activeText]}>{label}</Text></View></TouchableOpacity>)}</View>
   </View>;

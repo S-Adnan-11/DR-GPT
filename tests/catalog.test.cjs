@@ -23,15 +23,15 @@ test('combined directory filters distinguish branches and produce a useful empty
 test('missing optional service/location data keeps a facility available to address search', () => {
   assert.deepEqual(filterFacilities(fixture.facilities, { query: 'example address b2' }).map((facility) => facility.id), ['fixture-meadow-clinic']);
   assert.equal(filterFacilities(fixture.facilities, { query: 'meadow', service: 'General practice' }).length, 0);
-  assert.equal(searchGuides(fixture.guides, ' VISIT ').length, 1);
+  assert.equal(searchGuides(fixture.guides, ' VISIT ').length, 3);
   assert.equal(searchGuides(fixture.guides, 'no match').length, 0);
 });
 
 test('duplicate IDs, invalid review dates and invalid optional fields are rejected', () => {
   const cases = [
     (catalog) => { catalog.facilities[1].id = catalog.facilities[0].id; },
-    (catalog) => { catalog.guides[0].review = { status: 'reviewed', reviewedAt: '2026-11-08' }; },
-    (catalog) => { catalog.guides[0].review.reviewedAt = '2026-11-08'; },
+    (catalog) => { catalog.guides[0].review = { status: 'reviewed', reviewedAt: null }; },
+    (catalog) => { catalog.guides[0].review.status = 'draft'; catalog.guides[0].review.reviewedAt = '2026-11-08'; },
     (catalog) => { catalog.snapshot.updatedAt = '2026-02-30'; },
     (catalog) => { catalog.facilities[0].serviceTags = null; },
     (catalog) => { catalog.facilities[0].coordinates = { latitude: 100, longitude: 3 }; },
@@ -41,7 +41,8 @@ test('duplicate IDs, invalid review dates and invalid optional fields are reject
 });
 
 test('draft guidance and fictional facilities are excluded from public content and AI grounding', () => {
-  const published = selectPublicCatalog(fixture);
+  const drafts = copy(); for (const guide of drafts.guides) guide.review = { status: 'draft', reviewedAt: null };
+  const published = selectPublicCatalog(drafts);
   assert.deepEqual(published.guides, []);
   assert.deepEqual(published.firstAid, []);
   assert.deepEqual(published.facilities, []);
@@ -67,12 +68,12 @@ test('published records need field evidence and registration alone cannot establ
   assert.throws(() => validateCatalog(catalog), /check date/);
 });
 
-test('only sourced, dated reviewed guides can enter a published snapshot', () => {
+test('dated reviewed guides can join source-checked preparation guides in a published snapshot', () => {
   const catalog = copy();
   catalog.guides[0].review = { status: 'reviewed', reviewedAt: '2026-11-08' };
   catalog.guides[0].sources = [{ title: 'Example reference for contract testing', url: 'https://example.invalid/reference' }];
   const published = selectPublicCatalog(catalog);
-  assert.deepEqual(published.guides.map((guide) => guide.id), ['prepare-visit']);
+  assert.deepEqual(published.guides.map((guide) => guide.id), fixture.guides.map((guide) => guide.id));
   assert.deepEqual(published.firstAid, []);
 });
 
