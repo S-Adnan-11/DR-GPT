@@ -12,11 +12,11 @@ Supply `DRGPT_TEST_KEYSTORE` and `DRGPT_TEST_STORE_PASSWORD` through the protect
 .\scripts\build-android-guest.ps1 -BuildRoot <short-external-directory> -JdkRoot <jdk-root> -SdkRoot <android-sdk-root> -OutputDirectory <private-output-directory>
 ```
 
-The script stages only guest source and selected existing illustrations outside every Git worktree, installs locked packages with lifecycle scripts disabled, runs tests, generates Android and assembles a signed release APK with embedded JavaScript/assets. Installation prefers the npm cache and fetches any missing locked packages. It rejects unmanaged nonempty build directories. An existing managed build can be reused for the same profile. Use a separate directory for development binaries.
+The script stages guest source, retained library conversion inputs and selected existing illustrations outside every Git worktree, installs locked packages with lifecycle scripts disabled, runs tests, generates Android and assembles a signed release APK with embedded JavaScript/assets. Installation prefers the npm cache and fetches any missing locked packages. It rejects unmanaged nonempty build directories. An existing managed build can be reused for the same profile. Use a separate directory for development binaries.
 
-One original PNG-named illustration contains WebP bytes. The script verifies the format and creates a byte-identical `.webp` alias only in private staging. No alias or generated binary is committed. Original image files are retained. Image publication rights remain a separate decision; this build is for private review.
+Two original PNG-named illustrations contain WebP and JPEG bytes. Metro verifies their formats and creates byte-identical aliases with the correct extensions in ignored private staging. No alias or generated binary is committed. Original image files are retained. Image publication rights remain a separate decision; this build is for private review.
 
-`DRGPT_BUILD_PROFILE=guest` selects the offline configuration. Missing or unrecognized profiles fail closed; `guest-dev` is a deliberate separate [development profile](android-development.md). The offline app has no Internet, location, camera, microphone or notification permission. JavaScript network APIs and external link/call/message intents are blocked independently. Legacy service configuration and screens are excluded from build staging and the guest entry graph. This is an Android test path; iOS has not been validated.
+`DRGPT_BUILD_PROFILE=guest` selects the offline configuration. Missing or unrecognized profiles fail closed; `guest-dev` is a deliberate separate [development profile](android-development.md). The offline app has no Internet, location, camera, microphone or notification permission. JavaScript network APIs and external link/call/message intents are blocked independently. Legacy service configuration and unrelated screens are excluded from build staging. The retained library screens are staged as conversion inputs and stay outside the guest entry graph. This is an Android test path; iOS has not been validated.
 
 ## Guest behavior
 
@@ -28,7 +28,11 @@ Facility cards and details keep each branch's stable ID, branch label, area and 
 
 The saved-state key and version stay unchanged. Older guide/checklist saves without a facility collection load with an empty facility list. IDs removed from the catalog appear as unavailable saved facilities, with a removal action that preserves the other facilities, guides and checklist. No facility descriptions, contact details or personal notes enter storage. The location-candidate selector accepts only published records with finite in-range coordinates and dated source evidence; fixtures produce no pins. A map provider is not enabled in this build.
 
-First-aid pages contain clearly labeled review placeholders. The preparation guide contains draft general visit questions. There is no active emergency/contact action. Ask AI honestly reports that generated answers are unavailable and offers reading/search. Fictional listings and draft guidance are excluded by the public catalog selector.
+Learn contains the preparation guide plus all 24 original library topics as explicitly labeled legacy drafts. Search matches titles, descriptions, categories and topic metadata; clearing the query keeps the category, while the empty-state reset restores all guides. Guides can be saved from a card or the reader. Opening a guide from Saved keeps Saved selected and Back returns to it. The storage key/schema stay unchanged. Unavailable guide IDs are retained with a removal action that preserves other guides, facilities and checklist choices.
+
+The common reader handles headings, paragraphs, lists and full images without text overlays. Source links inherited from the original articles are displayed as unverified text with no external action. The converter retains the active articles' text, list markers, image order and repeated resource cards. Layout whitespace is normalized using JSX rules; resource button labels are retained as text. Generated draft records and image mappings stay under `.expo/guest-content`, outside committed source. Both Metro profiles generate the same records from the retained screens before bundling. A source comparison test checks every rendered text leaf and image occurrence independently against the original React trees.
+
+First-aid pages retain their review placeholders. The preparation guide keeps its original ID and body. There is no active emergency/contact action. Ask AI reports that generated answers are unavailable and offers reading/search. Fictional listings and all draft guidance remain excluded by the public catalog selector. Rendering and conversion tests do not establish clinical accuracy or source review.
 
 ## Checks
 
@@ -36,6 +40,6 @@ First-aid pages contain clearly labeled review placeholders. The preparation gui
 npm run test:guest
 ```
 
-Tests cover the catalog publication boundary, combined filters, branch identity/evidence, coordinate candidates, absent optional fields, older saved-state compatibility, stale facility IDs, storage hydration/concurrency/recovery/deletion and Back from Find care/Saved. They do not establish clinical review or native-device behavior.
+Tests cover full topic coverage and conversion, metadata/category search, invalid/duplicate IDs and body blocks, the publication boundary, combined facility filters, branch identity/evidence, coordinate candidates, older saved-state compatibility, stale guide/facility IDs, storage hydration/concurrency/recovery/deletion and Back from Learn/Find care/Saved. They do not establish clinical review or native-device behavior.
 
 Install privately on an Android handset. With airplane mode enabled, cold-launch without Metro; save/reopen the guide and checklist, force-stop and relaunch, filter facilities and open both same-name branches. Check system back, empty results, First aid, AI fallback, larger text and image crops. Restore connectivity and confirm that fictional/offline behavior remains. Inspect the signed APK's actual identity, permissions and embedded inputs before transfer.

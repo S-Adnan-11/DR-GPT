@@ -43,6 +43,7 @@ export default StyleSheet.create({
   picture: { width: '100%', aspectRatio: 2.2, backgroundColor: '#e7eaf0', overflow: 'hidden' },
   fillImage: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' },
   articlePicture: { borderRadius: 18, aspectRatio: 2 },
+  sourceUrl: { flexShrink: 1 },
   aidImage: { width: 58, height: 58 },
   aidBanner: { backgroundColor: '#fff0ec', borderRadius: 18, padding: 18, gap: 12 },
   notice: { backgroundColor: '#fff5df', borderLeftWidth: 3, borderColor: '#bd8b37', padding: 15, borderRadius: 10 },

@@ -5,7 +5,7 @@ import s from './styles';
 export const Heading = ({ children, eyebrow }) => <View style={{ gap: 10 }}>{eyebrow ? <Text style={s.eyebrow}>{eyebrow}</Text> : null}<Text accessibilityRole="header" style={s.h1}>{children}</Text></View>;
 export const Subheading = ({ children }) => <Text accessibilityRole="header" style={s.h2}>{children}</Text>;
 export const Paragraph = ({ children, muted = false, small = false }) => <Text style={[s.text, muted && s.muted, small && s.small]}>{children}</Text>;
-export const Picture = ({ source, label, article = false }) => <View style={[s.picture, article && s.articlePicture]}><Image source={source} accessibilityLabel={label} accessible resizeMode="cover" style={s.fillImage} /></View>;
+export const Picture = ({ source, label, article = false, decorative = false }) => <View accessibilityElementsHidden={decorative} importantForAccessibility={decorative ? 'no-hide-descendants' : 'auto'} style={[s.picture, article && s.articlePicture]}><Image source={source} accessibilityRole={decorative ? undefined : 'image'} accessibilityLabel={decorative ? undefined : label} accessible={!decorative} resizeMode={article ? 'contain' : 'cover'} style={s.fillImage} /></View>;
 export const Pill = ({ children, draft = false }) => <View style={[s.pill, draft && s.draft]}><Text style={[s.pillText, draft && s.draftText]}>{children}</Text></View>;
 export const Notice = ({ children, info = false }) => <View style={[s.notice, info && s.info]}><Text style={[s.noticeText, info && s.infoText]}>{children}</Text></View>;
 

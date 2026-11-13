@@ -12,6 +12,15 @@ function prepareGuestAssets(root) {
     return crypto.createHash('sha256').update(bytes).digest('hex');
   };
   const sha256 = update();
-  return { original, alias, sha256, update };
+  const libraryOriginal = path.join(root, 'assets/LibraryPhotos/men_health.png');
+  const libraryAlias = path.join(folder, 'men_health.jpg');
+  const updateLibrary = () => {
+    const bytes = fs.readFileSync(libraryOriginal);
+    if (bytes[0] !== 0xff || bytes[1] !== 0xd8 || bytes[2] !== 0xff) throw new Error('The retained men_health illustration must contain JPEG bytes.');
+    if (!fs.existsSync(libraryAlias) || !fs.readFileSync(libraryAlias).equals(bytes)) fs.writeFileSync(libraryAlias, bytes);
+    return crypto.createHash('sha256').update(bytes).digest('hex');
+  };
+  updateLibrary();
+  return { original, alias, sha256, update, libraryOriginal, libraryAlias, updateLibrary };
 }
 module.exports = { prepareGuestAssets };

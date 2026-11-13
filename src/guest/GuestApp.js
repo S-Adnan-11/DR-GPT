@@ -8,8 +8,7 @@ import s, { colors } from './styles';
 import { Notice } from './components';
 const { createGuestStore } = require('./store');
 const { createRouter, HOME } = require('./router');
-const { validateCatalog } = require('../catalog/catalog');
-const catalog = validateCatalog(require('../catalog/catalog.json'));
+const catalog = require('../catalog/guestCatalog');
 const router = createRouter(catalog);
 const screens = { home: Home, learn: Learn, guide: Guide, firstAid: FirstAid, firstAidDetail: FirstAidDetail, care: Care, facility: Facility, prepare: Prepare, saved: Saved, ask: Ask, topic: Topic };
 const tabs = [['home', 'Home', '⌂'], ['learn', 'Learn', '≡'], ['care', 'Find care', '⌖'], ['saved', 'Saved', '♡']];
@@ -18,6 +17,7 @@ function GuestRoot() {
   const [history, setHistory] = useState([HOME]);
   const [saved, setSaved] = useState(null), [busy, setBusy] = useState(false), [feedback, setFeedback] = useState('');
   const [guideQuery, setGuideQuery] = useState('');
+  const [guideCategory, setGuideCategory] = useState('');
   const [filters, setFilters] = useState({ query: '', area: '', facilityType: '', service: '' });
   const store = useMemo(() => createGuestStore({ storage: AsyncStorage, catalog, assertEnabled: assertGuestMode }), []);
   const { fontScale } = useWindowDimensions();
@@ -43,7 +43,7 @@ function GuestRoot() {
     setBusy(true);
     try {
       const next = await store[operation](...args); setSaved(next);
-      setFeedback(next.status === 'session' ? 'Device storage is unavailable. Changes last only while this app stays open.' : operation === 'clearSaved' ? 'Saved guides and facilities cleared.' : operation === 'clearChecklist' ? 'Checklist cleared.' : operation === 'removeUnavailableFacilities' ? 'Unavailable saved facilities removed.' : 'Updated on this device.');
+      setFeedback(next.status === 'session' ? 'Device storage is unavailable. Changes last only while this app stays open.' : operation === 'clearSaved' ? 'Saved guides and facilities cleared.' : operation === 'clearChecklist' ? 'Checklist cleared.' : operation === 'removeUnavailableFacilities' ? 'Unavailable saved facilities removed.' : operation === 'removeUnavailableGuides' ? 'Unavailable saved guides removed.' : 'Updated on this device.');
     } catch { setFeedback('Unable to update saved items. You can keep reading and try again.'); }
     finally { setBusy(false); }
   }
@@ -58,7 +58,7 @@ function GuestRoot() {
       {saved?.status === 'unreadable' ? <Notice>Saved items could not be read. You can continue and save again.</Notice> : null}
       {saved?.status === 'session' ? <Notice>Device storage is unavailable. Changes last only while this app stays open.</Notice> : null}
       {feedback ? <Text accessibilityLiveRegion="polite" style={s.feedback}>{feedback}</Text> : null}
-      <Screen {...{ catalog, go, route, saved, busy, update, filters, setFilters, guideQuery, setGuideQuery }} />
+      <Screen {...{ catalog, go, route, saved, busy, update, filters, setFilters, guideQuery, setGuideQuery, guideCategory, setGuideCategory }} />
     </ScrollView>
     <View accessibilityRole="tablist" style={s.nav}>{tabs.map(([name, label, symbol]) => <TouchableOpacity key={name} accessibilityRole="tab" accessibilityLabel={label} aria-selected={active === name} onPress={() => go(name)} style={[s.tab, { width: fontScale > 1.4 ? '50%' : '25%' }]}><View style={[s.tabInner, active === name && s.activeTab]}><Text accessible={false} style={[s.tabIcon, active === name && s.activeText]}>{symbol}</Text><Text style={[s.tabText, active === name && s.activeText]}>{label}</Text></View></TouchableOpacity>)}</View>
   </View>;

@@ -20,10 +20,12 @@ export const topics = [
 ];
 
 const recordIllustrations = {
+  ...require('./legacy-images'),
   'legacy-libraryphotos-medical_library-jpg': illustrations.library,
   'legacy-firstaidicons-cpr-icon-png': illustrations['cpr-choking'],
   'legacy-firstaidicons-burn-icon-png': illustrations['wounds-burns-bleeding'],
   'legacy-firstaidicons-poison-icon-png': illustrations['poison-allergies'],
   'legacy-firstaidicons-fracture-icon-png': illustrations['fractures-sprains'],
 };
-export const recordImage = (record) => recordIllustrations[record.images[0]];
+export const imageById = (id) => recordIllustrations[id];
+export const recordImage = (record) => imageById(record.images[0]);

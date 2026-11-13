@@ -7,11 +7,22 @@ const https = (value) => typeof value === 'string' && /^https:\/\/[^\s/?#]+(?:[/
 const check = (condition, message) => { if (!condition) throw new Error(message); };
 const normalized = (value = '') => String(value).trim().toLowerCase();
 const usableCoordinates = (point) => Boolean(point && Number.isFinite(point.latitude) && Math.abs(point.latitude) <= 90 && Number.isFinite(point.longitude) && Math.abs(point.longitude) <= 180);
+const validId = (value) => typeof value === 'string' && /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,127}$/.test(value);
+
+function validBlock(block, images) {
+  if (!block || typeof block !== 'object') return false;
+  // Keep the original preparation-guide sections readable without a migration.
+  if (block.type === undefined) return nonempty(block.heading) && nonempty(block.text);
+  if (['heading', 'paragraph'].includes(block.type)) return nonempty(block.text);
+  if (block.type === 'list') return textList(block.items) && block.items.length > 0;
+  return block.type === 'image' && images.includes(block.imageId) && nonempty(block.alt) && block.fit === 'contain';
+}
 
 function validateGuide(guide) {
   check(nonempty(guide.title) && nonempty(guide.summary) && textList(guide.topics) && guide.topics.length > 0, 'Guide metadata is incomplete.');
-  check(Array.isArray(guide.body) && guide.body.every((section) => nonempty(section.heading) && nonempty(section.text)), 'Guide body is invalid.');
   check(textList(guide.images), 'Guide image IDs must be an array.');
+  check(Array.isArray(guide.body) && guide.body.every((block) => validBlock(block, guide.images)), 'Guide body is invalid.');
+  if (hasOwn(guide, 'category')) check(nonempty(guide.category), 'Guide category is invalid.');
   check(Array.isArray(guide.sources) && guide.sources.every((source) => nonempty(source.title) && https(source.url)), 'Guide sources must identify HTTPS references.');
   check(['draft', 'reviewed'].includes(guide.review?.status), 'Guide review status is invalid.');
   if (guide.review.status === 'reviewed') {
@@ -57,7 +68,7 @@ function validateCatalog(catalog) {
   for (const [key, validate] of [['guides', validateGuide], ['firstAid', validateGuide], ['facilities', validateFacility]]) {
     check(Array.isArray(catalog[key]), `Catalog ${key} must be an array.`);
     for (const record of catalog[key]) {
-      check(nonempty(record.id) && !ids.has(record.id), 'Catalog IDs must be unique across all records.');
+      check(validId(record.id) && !ids.has(record.id), 'Catalog IDs must be valid and unique across all records.');
       ids.add(record.id);
       validate(record);
       if (key === 'facilities') check(catalog.snapshot.kind === 'fixture' ? record.status === 'fixture' : record.status !== 'fixture', 'Snapshot and facility kinds must agree.');
@@ -85,9 +96,10 @@ function locationCandidates(facilities) {
     .map((facility) => ({ id: facility.id, name: facility.name, address: facility.address, coordinates: { ...facility.coordinates } }));
 }
 
-function searchGuides(guides, query = '') {
+function searchGuides(guides, query = '', category = '') {
   const term = normalized(query);
-  return guides.filter((guide) => [guide.title, guide.summary, ...guide.topics].some((text) => normalized(text).includes(term)));
+  return guides.filter((guide) => (!category || guide.category === category) &&
+    [guide.title, guide.summary, guide.category, ...guide.topics].some((text) => normalized(text).includes(term)));
 }
 
 function selectPublicCatalog(catalog) {
