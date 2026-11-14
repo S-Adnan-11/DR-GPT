@@ -5,7 +5,8 @@ function createRouter(catalog) {
   const exists = (records, id) => records.some((record) => record.id === id);
   function valid(route) {
     if (!route || typeof route !== 'object') return false;
-    if ([...TABS, 'firstAid', 'prepare', 'ask'].includes(route.name)) return route.id === undefined;
+    if ([...TABS, 'firstAid', 'prepare', 'ask', 'visitQuestions'].includes(route.name)) return route.id === undefined;
+    if (route.name === 'visitQuestion') return typeof route.id === 'string' && /^[a-z0-9][a-z0-9-]{0,63}$/.test(route.id);
     if (route.name === 'guide') return exists(catalog.guides, route.id);
     if (route.name === 'facility') return exists(catalog.facilities, route.id);
     if (route.name === 'firstAidDetail') return exists(catalog.firstAid, route.id);
@@ -15,11 +16,13 @@ function createRouter(catalog) {
     if (!valid(route)) return history;
     const next = route.id === undefined ? { name: route.name } : { name: route.name, id: route.id };
     if (TABS.includes(next.name)) return next.name === 'home' ? [HOME] : [HOME, next];
+    // A source article opened from an answer must return to that answer on Back.
+    if (history[history.length - 1]?.name === 'visitQuestion' && next.name === 'guide') return [...history, next];
     const previous = history.findIndex((item) => item.name === next.name && item.id === next.id);
     return previous >= 0 ? history.slice(0, previous + 1) : [...history, next];
   }
   const back = (history) => history.length > 1 ? history.slice(0, -1) : history;
-  const activeTab = (route, history = []) => ['facility', 'guide'].includes(route.name)
+  const activeTab = (route, history = []) => ['facility', 'guide', 'visitQuestions', 'visitQuestion'].includes(route.name)
     ? [...history].reverse().find((item) => [route.name === 'facility' ? 'care' : 'learn', 'saved'].includes(item.name))?.name || (route.name === 'facility' ? 'care' : 'learn')
     : ({ guide: 'learn', topic: 'learn', prepare: 'saved' }[route.name] || (TABS.includes(route.name) ? route.name : null));
   return { navigate, back, activeTab };
