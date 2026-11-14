@@ -16,14 +16,15 @@ function createRouter(catalog) {
     if (!valid(route)) return history;
     const next = route.id === undefined ? { name: route.name } : { name: route.name, id: route.id };
     if (TABS.includes(next.name)) return next.name === 'home' ? [HOME] : [HOME, next];
-    // Keep source and related-guide reading inside the current answer's Back history.
-    const readingStart = next.name === 'guide' ? history.map((item) => item.name).lastIndexOf('visitQuestion') + 1 : 0;
+    // Keep reading loops inside the current answer or checklist journey.
+    const readingStart = next.name === 'guide' ? history.map((item) => item.name).lastIndexOf('visitQuestion') + 1
+      : next.name === 'visitQuestion' ? history.map((item) => item.name).lastIndexOf('prepare') + 1 : 0;
     const previous = history.findIndex((item, index) => index >= readingStart && item.name === next.name && item.id === next.id);
     return previous >= 0 ? history.slice(0, previous + 1) : [...history, next];
   }
   const back = (history) => history.length > 1 ? history.slice(0, -1) : history;
   const activeTab = (route, history = []) => ['facility', 'guide', 'visitQuestions', 'visitQuestion'].includes(route.name)
-    ? [...history].reverse().find((item) => [route.name === 'facility' ? 'care' : 'learn', 'saved'].includes(item.name))?.name || (route.name === 'facility' ? 'care' : 'learn')
+    ? [...history].reverse().map((item) => item.name === 'prepare' ? 'saved' : item.name).find((name) => [route.name === 'facility' ? 'care' : 'learn', 'saved'].includes(name)) || (route.name === 'facility' ? 'care' : 'learn')
     : ({ guide: 'learn', topic: 'learn', prepare: 'saved' }[route.name] || (TABS.includes(route.name) ? route.name : null));
   return { navigate, back, activeTab };
 }
