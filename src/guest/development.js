@@ -46,7 +46,10 @@ function installDevelopmentIsolation(target, linking, notify, configuration, dev
     open(method, url, ...args) { assertTransport(url); return super.open(method, url, ...args); }
   }
   class MetroSocket extends OriginalSocket {
-    constructor(url, ...args) { assertTransport(url, true); super(url, ...args); }
+    constructor(url, ...args) {
+      const address = typeof url === 'string' ? url.replace(/^http:/, 'ws:') : '';
+      assertTransport(address, true); super(address, ...args);
+    }
   }
   class DisabledEvents { constructor() { throw new TypeError('EventSource is unavailable in this development app.'); } }
   for (const [name, value] of Object.entries({

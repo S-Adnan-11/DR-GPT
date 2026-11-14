@@ -40,3 +40,17 @@ test('offline identity and isolation metadata remain distinct from the dev binar
   assert.deepEqual(emulator.architectures,['x86_64']);assert.deepEqual(dev.architectures,['arm64-v8a']);
   assert.throws(()=>guestProfile(undefined),/DRGPT_BUILD_PROFILE/);assert.throws(()=>guestProfile('live'),/DRGPT_BUILD_PROFILE/);assert.throws(()=>guestProfile('guest','unknown'),/target/);
 });
+
+test('native HMR accepts its HTTP-form URL only after normalizing to the configured WebSocket endpoint', () => {
+  const calls = [];
+  const target = { fetch: async () => {}, XMLHttpRequest: class {}, WebSocket: class { constructor(url) { calls.push(url); } } };
+  installDevelopmentIsolation(target, {}, () => {}, config, true);
+  new target.WebSocket(origin + '/hot?platform=android');
+  assert.deepEqual(calls, ['ws://127.0.0.1:8081/hot?platform=android']);
+  for (const value of [
+    'http://example.invalid:8081/hot', 'http://127.0.0.1:8082/hot', origin + '/api/health',
+    'http://127.0.0.1:8081.evil/hot', 'http://user@127.0.0.1:8081/hot', origin + '/assets/%2e%2e/hot',
+    { url: 'ws://127.0.0.1:8081/hot', toString: () => 'ws://example.invalid/hot' }, null,
+  ]) assert.throws(() => new target.WebSocket(value), /configured private Metro/);
+  assert.equal(calls.length, 1);
+});
