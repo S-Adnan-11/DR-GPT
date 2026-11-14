@@ -16,9 +16,9 @@ function createRouter(catalog) {
     if (!valid(route)) return history;
     const next = route.id === undefined ? { name: route.name } : { name: route.name, id: route.id };
     if (TABS.includes(next.name)) return next.name === 'home' ? [HOME] : [HOME, next];
-    // A source article opened from an answer must return to that answer on Back.
-    if (history[history.length - 1]?.name === 'visitQuestion' && next.name === 'guide') return [...history, next];
-    const previous = history.findIndex((item) => item.name === next.name && item.id === next.id);
+    // Keep source and related-guide reading inside the current answer's Back history.
+    const readingStart = next.name === 'guide' ? history.map((item) => item.name).lastIndexOf('visitQuestion') + 1 : 0;
+    const previous = history.findIndex((item, index) => index >= readingStart && item.name === next.name && item.id === next.id);
     return previous >= 0 ? history.slice(0, previous + 1) : [...history, next];
   }
   const back = (history) => history.length > 1 ? history.slice(0, -1) : history;

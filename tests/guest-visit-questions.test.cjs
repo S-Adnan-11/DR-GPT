@@ -72,6 +72,13 @@ test('visit answers preserve source Back and the originating Learn or Saved tab,
     assert.deepEqual(router.back(history), answer);
     assert.deepEqual(router.back(answer), menu);
     assert.deepEqual(router.back(menu), original);
+    const results = router.navigate(menu, { name: 'visitQuestion', id: 'delayed-results' });
+    const source = router.navigate(results, { name: 'guide', id: 'test-questions' });
+    const related = router.navigate(source, { name: 'guide', id: 'prepare-visit' });
+    assert.deepEqual(router.back(related), source);
+    assert.deepEqual(router.back(source), results);
+    // Revisiting a source after the answer still collapses its own reading loop.
+    assert.deepEqual(router.navigate(related, { name: 'guide', id: 'test-questions' }), source);
   }
   assert.equal(router.navigate([HOME], { name: 'visitQuestion', id: '../invalid' }).length, 1);
   assert.equal(router.navigate([HOME], { name: 'visitQuestion', id: 'retired-prompt' }).at(-1).name, 'visitQuestion');
