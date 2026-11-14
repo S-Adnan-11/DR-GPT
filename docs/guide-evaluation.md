@@ -1,6 +1,6 @@
 # Visit-guide response evaluation
 
-`src/guest/guideEvaluation.js` is an offline evaluation boundary. It is not imported by the guest interface. Ask AI continues to offer the existing reading/search fallback. No provider, account, transport, logging or persistence is added.
+`src/guest/guideEvaluation.js` checks selected passages and their source references. The offline Visit questions feature reuses it for a fixed menu of authored excerpts; it does not present fixture responses as live AI. Ask AI continues to offer the existing reading/search fallback. No provider, account, transport, logging or persistence is added.
 
 `evaluateGuideQuestion(question, options)` accepts a question and returns either an explicitly marked `evaluation-fixture` draft or routes to the preparation guide and library search. The default responder is deterministic; tests can inject a responder with `options.respond`. `options.catalog` permits contract checks, and `options.timeoutMs` bounds a response wait (1–30,000 ms, default 1,000 ms).
 

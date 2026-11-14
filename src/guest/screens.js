@@ -6,6 +6,7 @@ import { illustrations, topics, recordImage, imageById } from './illustrations';
 import s from './styles';
 const { filterFacilities, locationCandidates, searchGuides } = require('../catalog/catalog');
 const { QUESTIONS } = require('./store');
+const { VISIT_QUESTIONS } = require('./visitQuestions');
 
 export function Home({ go, catalog }) {
   return <>
@@ -56,6 +57,7 @@ export function Learn(props) {
   return <>
     <Heading eyebrow="Learn">A little more understanding.</Heading>
     <Paragraph muted small>Read offline and save on this device. Questions to help you prepare, discuss a test and confirm what happens next.</Paragraph>
+    {!showLegacy ? <CardLink title="Visit questions" description="Choose a question and read an answer from the guides." onPress={() => go('visitQuestions')} /> : null}
     <Subheading>{showLegacy ? 'Legacy draft library' : 'For your healthcare visit'}</Subheading>
     {showLegacy ? <Notice>These 24 retained articles await editorial and clinical review. Existing saves still open here.</Notice> : null}
     {legacyCount ? <TextLink title={showLegacy ? 'Back to the visit collection' : `Browse legacy drafts (${legacyCount})`} onPress={() => { setShowLegacy(!showLegacy); setGuideCategory(''); }} /> : null}
@@ -91,6 +93,7 @@ export function Guide(props) {
     <Heading eyebrow="Learn · Offline guide">{guide.title}</Heading><Pill draft={guide.review.status === 'draft'}>{reviewLabel(guide)}</Pill><Paragraph muted>{guide.summary}</Paragraph>
     {guide.legacy ? <Notice>Retained legacy draft. Health claims and inherited references have not been checked for this build. This material is awaiting editorial and qualified clinical review. Old resource actions are shown as text.</Notice> : <GuideCover guide={guide} />}
     <SaveButton {...props} kind="guides" id={guide.id} />
+    {guide.review.status === 'source-checked' && VISIT_QUESTIONS.some((prompt) => prompt.guideId === guide.id) ? <CardLink title="Visit questions" description="Choose a question and read an answer from the guides." onPress={() => props.go('visitQuestions')} /> : null}
     <ArticleBody body={guide.body} />
     {!guide.legacy && guide.review.status === 'draft' ? <Notice>This general preparation draft has not had a content review.</Notice> : null}
     <Subheading>Sources & review</Subheading>
