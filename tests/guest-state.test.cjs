@@ -20,7 +20,7 @@ test('guest IDs and checklist selections persist across fresh store instances', 
   assert.deepEqual(reopened.facilities, ['fixture-harbour-clinic-b']);
   assert.deepEqual(reopened.checklist, ['question-1']);
   assert.deepEqual([...storage.values.keys()], [STORAGE_KEY]);
-  assert.deepEqual(Object.keys(JSON.parse(storage.values.get(STORAGE_KEY))).sort(), ['checklist', 'facilities', 'guides', 'version']);
+  assert.deepEqual(Object.keys(JSON.parse(storage.values.get(STORAGE_KEY))).sort(), ['checklist', 'facilities', 'guides', 'version', 'visitQuestions']);
 });
 
 test('clear saved items keeps checklist; clear checklist keeps saves; unsave persists', async () => {
@@ -125,7 +125,7 @@ test('stale facility IDs have a removable unavailable state without losing guide
   assert.deepEqual(JSON.parse(storage.values.get(STORAGE_KEY)).facilities,['fixture-retired','fixture-harbour-clinic-b']);
   await current.removeUnavailableFacilities();
   const reopened=await store(storage).load();assert.deepEqual(reopened.unavailableFacilities,[]);assert.deepEqual(reopened.facilities,loaded.facilities);assert.deepEqual(reopened.guides,loaded.guides);assert.deepEqual(reopened.checklist,['question-1','question-2']);
-  assert.deepEqual(Object.keys(JSON.parse(storage.values.get(STORAGE_KEY))).sort(),['checklist','facilities','guides','version']);
+  assert.deepEqual(Object.keys(JSON.parse(storage.values.get(STORAGE_KEY))).sort(),['checklist','facilities','guides','version','visitQuestions']);
 });
 
 test('clearing all saved items also clears stale IDs and keeps the checklist', async () => {
