@@ -6,11 +6,12 @@ import { startupError, assertGuestMode, developmentBuild } from './runtime';
 import { Home, Learn, Guide, FirstAid, FirstAidDetail, Care, Facility, Prepare, Saved, Ask, Topic } from './screens';
 import s, { colors } from './styles';
 import { Notice } from './components';
+import { VisitQuestions, VisitQuestion } from './VisitQuestionScreens';
 const { createGuestStore } = require('./store');
 const { createRouter, HOME } = require('./router');
 const catalog = require('../catalog/guestCatalog');
 const router = createRouter(catalog);
-const screens = { home: Home, learn: Learn, guide: Guide, firstAid: FirstAid, firstAidDetail: FirstAidDetail, care: Care, facility: Facility, prepare: Prepare, saved: Saved, ask: Ask, topic: Topic };
+const screens = { home: Home, learn: Learn, guide: Guide, firstAid: FirstAid, firstAidDetail: FirstAidDetail, care: Care, facility: Facility, prepare: Prepare, saved: Saved, ask: Ask, topic: Topic, visitQuestions: VisitQuestions, visitQuestion: VisitQuestion };
 const tabs = [['home', 'Home', '⌂'], ['learn', 'Learn', '≡'], ['care', 'Find care', '⌖'], ['saved', 'Saved', '♡']];
 
 function GuestRoot() {
