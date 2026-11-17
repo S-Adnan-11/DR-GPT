@@ -16,7 +16,7 @@ export function VisitQuestions({ go }) {
   </>;
 }
 
-export function VisitQuestion({ route, catalog, go, setGuideQuery, setGuideCategory, setShowLegacy }) {
+export function VisitQuestion({ route, catalog, go, saved, busy, update, setGuideQuery, setGuideCategory, setShowLegacy }) {
   const [state, setState] = useState(null);
   useEffect(() => {
     let current = true;
@@ -24,6 +24,7 @@ export function VisitQuestion({ route, catalog, go, setGuideQuery, setGuideCateg
     return () => { current = false; };
   }, [route.id, catalog]);
   const answer = state?.id === route.id && state.catalog === catalog ? state.answer : null;
+  const selected = saved?.visitQuestions.includes(route.id) || false;
   if (!answer) return <><Heading eyebrow="Visit questions · Offline">Opening your guide answer…</Heading><Paragraph>Finding the passage in the visit guides.</Paragraph></>;
   if (answer.kind !== 'answer') return <>
     <Heading eyebrow="Visit questions · Offline">Answer unavailable</Heading>
@@ -35,6 +36,8 @@ export function VisitQuestion({ route, catalog, go, setGuideQuery, setGuideCateg
     <Heading eyebrow="Visit questions · Offline">{answer.prompt.question}</Heading>
     <Pill>From the visit guides</Pill>
     <View style={s.card}>{answer.passages.map((passage) => <Paragraph key={passage.id}>{passage.text}</Paragraph>)}</View>
+    <Button secondary selected={selected} disabled={!saved || busy} title={selected ? 'Remove from visit checklist' : 'Add to visit checklist'} onPress={() => update(selected ? 'removeVisitQuestion' : 'addVisitQuestion', route.id)} />
+    <TextLink title="Open visit checklist" onPress={() => go('prepare')} />
     <Subheading>Read the source guide</Subheading>
     <CardLink title={answer.guide.title} description="Read the full guide and its sources offline." icon="≡" onPress={() => go('guide', answer.guide.id)} />
     <Subheading>Sources</Subheading>

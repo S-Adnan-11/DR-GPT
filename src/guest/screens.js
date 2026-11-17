@@ -159,9 +159,21 @@ export function Facility(props) {
   </>;
 }
 
-export function Prepare({ saved, busy, update }) {
+export function Prepare({ saved, busy, update, go }) {
   return <><Heading eyebrow="Visit preparation">A few questions to take with you.</Heading><Paragraph muted>Use this as a general planning checklist. You do not need to enter health details.</Paragraph>
     {QUESTIONS.map((question) => { const checked = saved?.checklist.includes(question.id) || false; return <TouchableOpacity key={question.id} accessibilityRole="checkbox" accessibilityLabel={question.text} aria-checked={checked} aria-disabled={!saved || busy} disabled={!saved || busy} onPress={() => update('toggle', 'checklist', question.id)} style={[s.card, s.cardRow]}><Text accessible={false} allowFontScaling={false} style={[s.checkbox, checked && s.checked]}>{checked ? '✓' : ''}</Text><View style={s.grow}><Paragraph>{question.text}</Paragraph></View></TouchableOpacity>; })}
+    <Subheading>Questions from the guides</Subheading>
+    {saved?.visitQuestions.length ? saved.visitQuestions.map((id) => <View key={id} style={{ gap: 4 }}>
+      <CardLink title={VISIT_QUESTIONS.find((prompt) => prompt.id === id).question} description="Read the answer and its source guide" onPress={() => go('visitQuestion', id)} />
+      <Button secondary disabled={busy} title="Remove question" onPress={() => update('removeVisitQuestion', id)} />
+    </View>) : <Paragraph muted small>No guide questions selected yet.</Paragraph>}
+    {saved?.unavailableVisitQuestions.map((id) => <View key={id} style={s.card}>
+      <Text style={s.h3}>Visit question unavailable</Text>
+      {VISIT_QUESTIONS.find((prompt) => prompt.id === id) ? <Paragraph>{VISIT_QUESTIONS.find((prompt) => prompt.id === id).question}</Paragraph> : null}
+      <Paragraph muted small>This question or its source guide is no longer available. Your other checklist choices are kept.</Paragraph>
+      <Button secondary disabled={busy} title="Remove unavailable question" onPress={() => update('removeVisitQuestion', id)} />
+    </View>)}
+    <CardLink title="Browse visit questions" description="Choose a question to add to this checklist." onPress={() => go('visitQuestions')} />
     <Notice info>Checklist choices stay on this device. A checklist is not an appointment confirmation.</Notice><TextLink title="Clear checklist" onPress={() => update('clearChecklist')} />
   </>;
 }
@@ -174,7 +186,7 @@ export function Saved({ catalog, saved, go, update, busy }) {
     {saved?.unavailableGuides.length ? <View style={s.card}><Text style={s.h3}>Saved guide unavailable</Text><Paragraph muted small>{saved.unavailableGuides.length} saved {saved.unavailableGuides.length === 1 ? 'guide is' : 'guides are'} no longer in this library. Other saved items and your checklist are kept.</Paragraph><Button secondary disabled={busy} title="Remove unavailable guides" onPress={() => update('removeUnavailableGuides')} /></View> : null}
     <Subheading>Facilities</Subheading>{facilities.length ? facilities.map((facility) => <FacilityCard key={facility.id} facility={facility} go={go} />) : <Paragraph muted small>No saved facilities yet.</Paragraph>}
     {saved?.unavailableFacilities.length ? <View style={s.card}><Text style={s.h3}>Saved facility unavailable</Text><Paragraph muted small>{saved.unavailableFacilities.length} saved {saved.unavailableFacilities.length === 1 ? 'facility is' : 'facilities are'} no longer in this directory. Other saved items and your checklist are kept.</Paragraph><Button secondary disabled={busy} title="Remove unavailable facilities" onPress={() => update('removeUnavailableFacilities')} /></View> : null}
-    <CardLink title="Your visit checklist" description={`${saved?.checklist.length || 0} questions checked`} icon="✓" onPress={() => go('prepare')} /><View style={s.rule} />
+    <CardLink title="Your visit checklist" description={`${saved?.checklist.length || 0} items checked · ${saved?.visitQuestions.length || 0} guide questions selected`} icon="✓" onPress={() => go('prepare')} /><View style={s.rule} />
     <TextLink danger title="Clear saved guides and facilities" onPress={() => update('clearSaved')} /><Paragraph muted small>The bundled guides remain available in Learn.</Paragraph>
   </>;
 }
