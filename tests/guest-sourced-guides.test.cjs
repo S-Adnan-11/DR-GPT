@@ -67,6 +67,6 @@ test('an earlier installation retains prepare-visit, legacy guides, checklist ID
   assert.deepEqual(again.guides, ['prepare-visit', 'sleep-health', 'test-questions', 'before-you-leave']);
   assert.deepEqual(again.checklist, before.checklist); assert.deepEqual(again.facilities, before.facilities);
   const persisted = JSON.parse(raw);
-  assert.deepEqual(Object.keys(persisted).sort(), ['checklist', 'facilities', 'guides', 'version']);
+  assert.deepEqual(Object.keys(persisted).sort(), ['checklist', 'facilities', 'guides', 'version', 'visitQuestions']);
   assert.ok(Object.values(persisted).filter(Array.isArray).flat().every((id) => typeof id === 'string'));
 });
