@@ -38,6 +38,8 @@ For daily updates, run `git pull --ff-only` and `nvm use` in this checkout. Metr
 
 The mislabeled legacy WebP is copied into an ignored `.expo/guest-assets` cache, with format/byte checks and a source watcher. Metro reads application code from the active checkout; there is no application-source staging copy in the daily refresh loop.
 
+Native development entry initializes React Native's core globals before wrapping its fetch, XMLHttpRequest and WebSocket implementations. This supports a cold dev-client start when the entry runs before those globals exist. React Native's HTTP-form hot-reload URL is normalized to WebSocket before checking the same configured host, port and allowed route. Offline, invalid and non-debug configurations install the deny policy without this development initialization.
+
 ## Emulator
 
 Use an existing accelerated Android host, an API 35 x86_64 image and a phone AVD named `drgpt-api35`. Check acceleration and completed Android boot before installing an APK. The checked-in Windows helper uses the SDK roots in `ANDROID_HOME` / `ANDROID_AVD_HOME`:
